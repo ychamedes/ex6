@@ -18,19 +18,24 @@ public class Sjavac {
 
     private static final int INITIAL_LINE_COUNT = 0;
 
-
     private static final String ERROR = " Error: ";
     private static final String INVALID_NUMBER_OF_ARGUMENTS = "Invalid number of arguments";
     private static final String UNKNOWN_ERROR = "Unknown Error";
 
-
     private String sourceFilePath;
 
-
+    /**
+     * Class constructor that receives a source file name.
+     * @param sourceFileName the path of the source file.
+     */
     public Sjavac(String sourceFileName){
         sourceFilePath = sourceFileName;
     }
 
+    /**
+     * Checks the code in s-Java file.
+     * Prints if the code is legal or not.
+     */
     private void validateCode(){
 
 
@@ -66,6 +71,12 @@ public class Sjavac {
 
     }
 
+    /**
+     * Counts the number of lines in the s-Java file.
+     * @param file the s-Java file.
+     * @return the number of lines.
+     * @throws IOException
+     */
     private int countFileLines(File file) throws IOException{
         int lineCount = INITIAL_LINE_COUNT;
         BufferedReader lineCounter = new BufferedReader(new FileReader(file));
@@ -80,6 +91,12 @@ public class Sjavac {
 
     }
 
+    /**
+     * Parses the s-Java file into an array of lines.
+     * @param file the s-Java file.
+     * @return array of the file lines.
+     * @throws IOException
+     */
     private String[] parseFile(File file) throws IOException{
 
         BufferedReader reader;
@@ -99,6 +116,10 @@ public class Sjavac {
         return lineArray;
     }
 
+    /**
+     * Prints a general error message with a specific error message.
+     * @param errorMessage the specific error message.
+     */
     private static void printGeneralError(String errorMessage){
         if (errorMessage == null) {
             errorMessage = UNKNOWN_ERROR;
