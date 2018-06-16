@@ -5,4 +5,5 @@ package ex6;
  * Verifies that variables and methods are not used outside of their scope or declared in the wrong place.
  */
 public class ScopeChecker {
+
 }

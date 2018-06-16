@@ -1,5 +1,7 @@
 package ex6.main;
 
+import ex6.SyntaxChecker;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -39,8 +41,7 @@ public class Sjavac {
         try{
             String[] lineArray = parseFile(sourceFile);
 
-            // All code goes here
-
+            SyntaxChecker.checkSyntax(lineArray);
 
             System.out.println(LEGAL_CODE_OUTPUT);
         }
