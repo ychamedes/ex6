@@ -1,0 +1,18 @@
+-Things to check
+
+-Syntax
+    -Comment line
+    -Whitespace line
+    -Code line:
+        -Legal line enders (;, {, })
+        -Misspelled reserved words
+        -Illegal variable names
+        -Illegal method names
+        -Parentheses for if/while blocks
+
+
+-Scope
+
+-Variables
+
+-Logic

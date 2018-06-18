@@ -1,4 +1,4 @@
-package ex6;
+package ex6.main;
 
 /**
  * ScopeChecker checks that there are no violations of scope in the code.

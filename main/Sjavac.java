@@ -1,6 +1,6 @@
 package ex6.main;
 
-import ex6.SyntaxChecker;
+import ex6.Exceptions.*;
 
 import java.io.BufferedReader;
 import java.io.File;

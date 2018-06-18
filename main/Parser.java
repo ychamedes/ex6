@@ -1,4 +1,4 @@
-package ex6;
+package ex6.main;
 
 import ex6.Scopes.Scope;
 

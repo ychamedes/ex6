@@ -1,4 +1,6 @@
-package ex6;
+package ex6.main;
+
+import ex6.Exceptions.IllegalCodeException;
 
 /**
  * SyntaxChecker class checks that there are no violations of syntax in the code.
@@ -15,7 +17,7 @@ public class SyntaxChecker {
      * Checks if a line is empty (containing only white space)
      * @param line the line to be checked
      */
-    private void blankLineCheck(String line){
+    private boolean blankLineCheck(String line){
 
     }
 
@@ -23,7 +25,7 @@ public class SyntaxChecker {
      * Checks if the line is a valid comment (Beginning with //)
      * @param line the line to be checked
      */
-    private void commentLineCheck(String line){
+    private boolean commentLineCheck(String line){
 
     }
 
@@ -31,7 +33,7 @@ public class SyntaxChecker {
      * Checks if a line has the correct format for a line of code (ends in ;, {, or } )
      * @param line the line to be checked
      */
-    private void codeLineCheck(String line){
+    private void codeLineCheck(String line) throws IllegalCodeException{
 
     }
 
