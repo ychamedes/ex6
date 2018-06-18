@@ -4,15 +4,29 @@
     -Comment line
     -Whitespace line
     -Code line:
-        -Legal line enders (;, {, })
+        -Legal line Enders (;, {, })
+        -Illegal comment format
+    "If reserved word"
         -Misspelled reserved words
         -Illegal variable names
         -Illegal method names
         -Parentheses for if/while blocks
+        -"final" before variable type
 
-
--Scope
+-Global
+    -Make list of global variables
+    -Call variable check
 
 -Variables
+    -Proper declaration:
+        -Value type match
+        -Final without value
 
 -Logic
+
+-Scope
+    (Build scope tree by checking open and closed brackets)
+    (Check variables by going up to parent node's arraylists)
+    "if not reserved word"
+        -Reassign to final
+        -Variable used is declared
