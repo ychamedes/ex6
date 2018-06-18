@@ -24,9 +24,6 @@ public class Sjavac {
     private static final String INVALID_NUMBER_OF_ARGUMENTS = "Invalid number of arguments";
     private static final String UNKNOWN_ERROR = "Unknown Error";
 
-    static final String[] RESERVED_WORDS = {"int", "double", "boolean", "char", "String", "void", "final", "if",
-            "while", "true", "false", "return"};
-
     private String sourceFilePath;
 
     /**
@@ -57,7 +54,7 @@ public class Sjavac {
             printGeneralError(error.getMessage());
             System.exit(0);
         }
-        catch (IllegalCodeException){
+        catch (IllegalCodeException error){
             System.out.println(ILLEGAL_CODE_OUTPUT);
             System.exit(0);
         }
@@ -79,7 +76,7 @@ public class Sjavac {
      * Counts the number of lines in the s-Java file.
      * @param file the s-Java file.
      * @return the number of lines.
-     * @throws IOException
+     * @throws IOException an IO exception
      */
     private int countFileLines(File file) throws IOException{
         int lineCount = INITIAL_LINE_COUNT;
@@ -99,7 +96,7 @@ public class Sjavac {
      * Parses the s-Java file into an array of lines.
      * @param file the s-Java file.
      * @return array of the file lines.
-     * @throws IOException
+     * @throws IOException an IO exception
      */
     private String[] parseFile(File file) throws IOException{
 
