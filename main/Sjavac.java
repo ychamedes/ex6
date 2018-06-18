@@ -24,6 +24,9 @@ public class Sjavac {
     private static final String INVALID_NUMBER_OF_ARGUMENTS = "Invalid number of arguments";
     private static final String UNKNOWN_ERROR = "Unknown Error";
 
+    static final String[] RESERVED_WORDS = {"int", "double", "boolean", "char", "String", "void", "final", "if",
+            "while", "true", "false", "return"};
+
     private String sourceFilePath;
 
     /**
