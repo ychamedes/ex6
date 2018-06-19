@@ -1,5 +1,8 @@
 package ex6.Scopes;
 
+import ex6.Exceptions.IllegalCodeException;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Queue;
 
@@ -8,27 +11,42 @@ import java.util.Queue;
  * Keeps track of elements in the scope and its parent.
  */
 public class Scope {
+    private ArrayList<String> scopeLines;
+
     /** List of the data elements in the scope. */
     private HashMap<String, String> variables;
 
     /** List of global variables shared by all scopes*/
     private static HashMap<String, String> globals;
 
-    /** List of the sub-scopes of the scope. */
-    private Queue<Scope> subScopes;
-
     /** The parent scope of the scope. */
     private Scope parentScope;
 
+    /** The subscopes nested in this scope. */
+    private ArrayList<String>[] subScopes;
 
-    public Scope(HashMap<String, String> mainScopeVariables, Queue<Scope> subScopes){
-        globals = mainScopeVariables;
-        this.subScopes = subScopes;
+    public Scope(ArrayList<String> lines){
+        scopeLines = lines;
     }
 
-    public Scope(HashMap<String, String> localVariables, Queue<Scope> subScopes, Scope parent){
-        variables = localVariables;
-        this.subScopes = subScopes;
+    public Scope(ArrayList<String> lines, Scope parent){
+        scopeLines = lines;
         parentScope = parent;
     }
+
+    public ArrayList<String> getLines(){
+        return scopeLines;
+    }
+
+    public HashMap<String, String> getVariables(){
+        return variables;
+    }
+
+    public void addVariable(String type, String name, String value) throws IllegalCodeException{
+
+    }
+
+    public void addSubscope(ArrayList<String>)
+
+
 }

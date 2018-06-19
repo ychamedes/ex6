@@ -11,9 +11,9 @@ import java.util.regex.Pattern;
  */
 public class SyntaxChecker {
 
-    private static String variableReservedRegex = "int|double|String|boolean|char";
-    private static String otherReservedRegex = "void|final|if|while|true|false|return";
-    private static String variableNameRegex = "_\\w+|[a-zA-Z]\\w*";
+    private final static String variableReservedRegex = "int|double|String|boolean|char";
+    private final static String otherReservedRegex = "void|final|if|while|true|false|return";
+    private final static String variableNameRegex = "_\\w+|[a-zA-Z]\\w*";
 
     static void checkSyntax(String[] lines) throws IllegalCodeException{
         for (String line : lines){
@@ -36,6 +36,7 @@ public class SyntaxChecker {
                         throw new IllegalCodeException();
                     }
                     // Check that if,while,method are closed.
+                    // Check for any other type of line (a = b, or illegal lines)
                 }
             }
         }
