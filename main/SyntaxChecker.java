@@ -14,28 +14,40 @@ public class SyntaxChecker {
     private static String variableReservedRegex = "int|double|String|boolean|char";
     private static String otherReservedRegex = "void|final|if|while|true|false|return";
     private static String variableNameRegex = "_\\w+|[a-zA-Z]\\w*";
+    private static String methodNameRegex = "[a-zA-Z]\\w*";
+    private static String variableInitializationRegex = "\\=\\s*(true|false|\"\\w+\"|\\d+(\\.\\d+)?|"+variableNameRegex+")";
 
     static void checkSyntax(String[] lines) throws IllegalCodeException{
         for (String line : lines){
             if (!blankLineCheck(line) && !commentLineCheck(line)){
-                if (!endOfLineCheck(line)){
+                /* Check every line for a valid end and invalid tokens. */
+                if (!endOfLineCheck(line) || invalidTokenCheck(line)){
+                    System.out.println("End of Line, Invalid Token");
                     throw new IllegalCodeException();
                 }
                 if (reservedWordAtStart(line)){
+                    /* Check every line according to a specific format, that it follows that format. */
                     String firstWord = line.substring(0, line.indexOf(" "));
                     // Variable declaration
                     if (firstWord.matches(variableReservedRegex+"|final") && !variableSyntaxCheck(line)){
+                        System.out.println("variable");
                         throw new IllegalCodeException();
                     }
                     // If/While block
                     if (firstWord.matches("if|while") && !ifWhileSyntaxCheck(line)){
+                        System.out.println("if/while");
                         throw new IllegalCodeException();
                     }
                     // Method declaration
                     if (firstWord.equals("void") && !methodSyntaxCheck(line)){
+                        System.out.println("method");
                         throw new IllegalCodeException();
                     }
-                    // Check that if,while,method are closed.
+                }
+                // Check syntax of cases without reserved words
+                else if (!nonReservedWordCheck(line)) {
+                    System.out.println("nonReserved");
+                    throw new IllegalCodeException();
                 }
             }
         }
@@ -59,7 +71,7 @@ public class SyntaxChecker {
      * @return true if the line is a comment
      */
     private static boolean commentLineCheck(String line){
-        Pattern p = Pattern.compile("//");
+        Pattern p = Pattern.compile("\\/\\/");
         Matcher m = p.matcher(line);
         return m.lookingAt();
     }
@@ -75,14 +87,18 @@ public class SyntaxChecker {
         return m.lookingAt();
     }
 
+    private static boolean nonReservedWordCheck(String line){
+        Pattern p = Pattern.compile("\\s*(return;|\\}|"+variableNameRegex+"\\s*"+variableInitializationRegex+")\\s*");
+        Matcher m = p.matcher(line);
+        return m.matches();
+    }
+
     /**
      * Checks if line follows the correct format of variable declaration.
      * @param line the line to be checked.
      * @return true if the line follows the format.
      */
     private static boolean variableSyntaxCheck(String line){
-        String variableInitializationRegex = "\\=\\s*(\\w+)";
-
         Pattern pattern = Pattern.compile("\\s*((final)\\s+)?("+variableReservedRegex+")\\s+("+
                 variableNameRegex+"\\s*("+variableInitializationRegex+")?\\,?\\s*)+\\;\\s*");
         Matcher matcher = pattern.matcher(line);
@@ -95,8 +111,7 @@ public class SyntaxChecker {
      * @return true if the line follows the format.
      */
     private static boolean ifWhileSyntaxCheck(String line){
-        Pattern pattern = Pattern.compile("\\s*(if|while)\\s*\\(\\s*(\\"+variableNameRegex+"\\s*(\\|\\||&&))*\\s*"+
-                variableNameRegex+"\\s*\\)\\s*\\{\\s*");
+        Pattern pattern = Pattern.compile("\\s*(if|while)\\s*\\(\\s*(\\w+\\s*(\\|\\||&&))*\\s*\\w+\\s*\\)\\s*\\{\\s*");
         Matcher matcher = pattern.matcher(line);
         return matcher.matches();
     }
@@ -107,7 +122,6 @@ public class SyntaxChecker {
      * @return true if the line follows the format.
      */
     private static boolean methodSyntaxCheck(String line){
-        String methodNameRegex = "[a-zA-Z]\\w*";
         Pattern pattern = Pattern.compile("\\s*void\\s+("+methodNameRegex+")\\s*\\(\\s*(("+
                 variableReservedRegex+")\\s+("+variableNameRegex+"),)*\\s*(("+variableReservedRegex+")\\s+("+
                 variableNameRegex+"))\\s*\\)\\s*\\{\\s*");
@@ -121,7 +135,18 @@ public class SyntaxChecker {
      * @return true if line ends correctly
      */
     private static boolean endOfLineCheck(String line){
-        Pattern pattern = Pattern.compile("[;{}]$");
+        Pattern pattern = Pattern.compile("[;\\{\\}]\\s*$");
+        Matcher matcher = pattern.matcher(line);
+        return matcher.find();
+    }
+
+    /**
+     * Checks that the line has no invalid tokens, such as operators or alternate comment structures.
+     * @param line the line to be checked.
+     * @return true if the line has invalid tokens
+     */
+    private static boolean invalidTokenCheck(String line){
+        Pattern pattern = Pattern.compile("\\/\\*{1,2}.*\\*\\/|[-\\+\\*]");
         Matcher matcher = pattern.matcher(line);
         return matcher.find();
     }
