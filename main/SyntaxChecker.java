@@ -36,13 +36,13 @@ public class SyntaxChecker {
     static final Pattern RESERVED_WORD_PATTERN = Pattern.compile("^\\s*(int|double|String|boolean|char|final|void|if|while|true|false|return)");
 
     /** Pattern for valid non-reserved word sequences: closing curly brace, variable initialization, and method calling. */
-    static final Pattern NON_RESERVED_PATTERN = Pattern.compile("\\s*(}|(_\\w+|[a-zA-Z]\\w*)\\s*=\\s*(true|false|\\\"\\w*\\\"|\\d+(\\.\\d+)?|_\\w+|[a-zA-Z]\\w*)\\s*;|([a-zA-Z]\\w*)\\s*\\(\\s*((_\\w+|[a-zA-Z]\\w*)\\s*)?(,\\s*(_\\w+|[a-zA-Z]\\w*)\\s*)*\\)\\s*;)\\s*");
+    static final Pattern NON_RESERVED_PATTERN = Pattern.compile("\\s*(}|(_\\w+|[a-zA-Z]\\w*)\\s*=\\s*(true|false|\\\"\\w*\\\"|-?\\d+(\\.\\d+)?|_\\w+|[a-zA-Z]\\w*)\\s*;|([a-zA-Z]\\w*)\\s*\\(\\s*((_\\w+|[a-zA-Z]\\w*)\\s*)?(,\\s*(_\\w+|[a-zA-Z]\\w*)\\s*)*\\)\\s*;)\\s*");
 
     /** Pattern for variable(s) declaration, including possible final keyword and initialization.*/
-    static final Pattern VARIABLE_PATTERN = Pattern.compile("\\s*((final)\\s+)?(int|double|String|boolean|char)\\s+(?!final)((_\\w+|[a-zA-Z]\\w*)\\s*(=\\s*(true|false|\\\"\\w*\\\"|\\d+(\\.\\d+)?|_\\w+|[a-zA-Z]\\w*))?\\s*)(,\\s*(_\\w+|[a-zA-Z]\\w*)\\s*(=\\s*(true|false|\\\"\\w*\\\"|\\d+(\\.\\d+)?|_\\w+|[a-zA-Z]\\w*))?\\s*)*;\\s*");
+    static final Pattern VARIABLE_PATTERN = Pattern.compile("\\s*((final)\\s+)?(int|double|String|boolean|char)\\s+(?!final)((_\\w+|[a-zA-Z]\\w*)\\s*(=\\s*(true|false|\\\"\\w*\\\"|-?\\d+(\\.\\d+)?|_\\w+|[a-zA-Z]\\w*))?\\s*)(,\\s*(_\\w+|[a-zA-Z]\\w*)\\s*(=\\s*(true|false|\\\"\\w*\\\"|-?\\d+(\\.\\d+)?|_\\w+|[a-zA-Z]\\w*))?\\s*)*;\\s*");
 
     /** Pattern for control flow (if/while) statement with valid condition type. */
-    static final Pattern CONTROL_FLOW_PATTERN = Pattern.compile("\\s*(if|while)\\s*\\(\\s*(\\w+\\s*(\\|\\||&&))*\\s*\\w+\\s*\\)\\s*\\{\\s*");
+    static final Pattern CONTROL_FLOW_PATTERN = Pattern.compile("\\s*(if|while)\\s*\\((\\s*(true|false|_\\w+|[a-zA-z]\\w*|-?\\d+(\\.\\d+)?)\\s*)((\\|\\||&&)\\s*(true|false|_\\w+|[a-zA-z]\\w*|-?\\d+(\\.\\d+)?)\\s*)*\\)\\s*\\{\\s*");
 
     /** Pattern for method declaration, including the void keyword and valid parameter conditions. */
     static final Pattern METHOD_PATTERN = Pattern.compile("\\s*void\\s+([a-zA-Z]\\w*)\\s*\\((\\s*(final\\s+)?(int|double|String|boolean|char)\\s+(_\\w+|[a-zA-Z]\\w*)\\s*)?(,\\s*(final\\s+)?(int|double|String|boolean|char)\\s+(_\\w+|[a-zA-Z]\\w*)\\s*)*\\)\\s*\\{\\s*");
@@ -54,46 +54,40 @@ public class SyntaxChecker {
     static final Pattern END_OF_LINE_PATTERN = Pattern.compile("[;\\{\\}]\\s*$");
 
     /** Pattern for illegal tokens or sequence in the code: operators and alternate comment patterns. */
-    static final Pattern ILLEGAL_TOKENS_PATTERN = Pattern.compile("\\/\\*{1,2}.*\\*\\/|[-\\+\\*]");
+    static final Pattern ILLEGAL_TOKENS_PATTERN = Pattern.compile("(?!-\\d)(\\/\\*{1,2}.*\\*\\/|[-\\+\\*])");
 
     static void checkSyntax(String[] lines) throws IllegalCodeException{
         for (String line : lines){
             if (!blankLineCheck(line) && !commentLineCheck(line)){
                 /* Check every line for a valid end and invalid tokens. */
                 if (!endOfLineCheck(line) || invalidTokenCheck(line)){
-                    System.out.println("END?INVALID");
                     throw new IllegalCodeException();
                 }
                 Matcher m = FIRST_WORD_PATTERN.matcher(line);
                 m.find();
                 String firstWord = m.group();
-
+//                System.out.println(firstWord);
                 if (reservedWordAtStart(line)){
                     /* Check every line according to a specific format, that it follows that format. */
                     // Variable declaration
                     if (firstWord.matches(VARIABLE_DECLARATION_WORDS_REGEX) && !variableSyntaxCheck(line)){
-                        System.out.println("VARIABLE");
                         throw new IllegalCodeException();
                     }
                     // Control Flow block
                     if (firstWord.matches(CONTROL_FLOW_REGEX) && !controlFlowSyntaxCheck(line)){
-                        System.out.println("FLOW");
                         throw new IllegalCodeException();
                     }
                     // Method declaration
                     if (firstWord.matches(METHOD_DECLARATION_REGEX) && !methodSyntaxCheck(line)){
-                        System.out.println("METHOD");
                         throw new IllegalCodeException();
                     }
                     // Return case
                     if (firstWord.matches(METHOD_RETURN_KEYWORD) && !returnLineCheck(line)){
-                        System.out.println("RETURN");
                         throw new IllegalCodeException();
                     }
                 }
                 // Check syntax of cases without reserved words
                 else if (!nonReservedWordCheck(line)) {
-                    System.out.println("NON-RESERVED");
                     throw new IllegalCodeException();
                 }
             }
