@@ -1,6 +1,6 @@
-package ex6.main;
+package oop.ex6.main;
 
-import ex6.Exceptions.*;
+import oop.ex6.Exceptions.*;
 
 import java.io.BufferedReader;
 import java.io.File;

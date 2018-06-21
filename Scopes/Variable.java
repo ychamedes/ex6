@@ -1,4 +1,4 @@
-package ex6.Scopes;
+package oop.ex6.Scopes;
 
 /**
  * Variable class represents a variable

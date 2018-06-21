@@ -1,6 +1,6 @@
-package ex6.main;
+package oop.ex6.main;
 
-import ex6.Exceptions.IllegalCodeException;
+import oop.ex6.Exceptions.IllegalCodeException;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
