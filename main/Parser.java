@@ -1,8 +1,4 @@
-package ex6.main;
-
-import ex6.Scopes.Scope;
-
-import java.util.TreeSet;
+package oop.ex6.main;
 
 /**
  * Parser class that is used to break down and a file of s-Java code.

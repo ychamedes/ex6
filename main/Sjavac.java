@@ -1,6 +1,6 @@
-package ex6.main;
+package oop.ex6.main;
 
-import ex6.Exceptions.*;
+import oop.ex6.Exceptions.*;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -77,12 +77,12 @@ public class Sjavac {
      * Counts the number of lines in the s-Java file.
      * @param file the s-Java file.
      * @return the number of lines.
-     * @throws IOException an IO exception
+     * @throws IOException an IO exception from the reader
      */
     private int countFileLines(File file) throws IOException{
         int lineCount = INITIAL_LINE_COUNT;
         BufferedReader lineCounter = new BufferedReader(new FileReader(file));
-        String line = lineCounter.readLine(); // Need to handle empty file???
+        String line = lineCounter.readLine();
         while(line != null){
             lineCount++;
             line = lineCounter.readLine();
@@ -97,7 +97,7 @@ public class Sjavac {
      * Parses the s-Java file into an array of lines.
      * @param file the s-Java file.
      * @return array of the file lines.
-     * @throws IOException an IO exception
+     * @throws IOException an IO exception from the reader
      */
     private String[] parseFile(File file) throws IOException{
 

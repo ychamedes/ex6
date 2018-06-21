@@ -1,4 +1,4 @@
-package ex6.Scopes;
+package oop.ex6.Scopes;
 
 import ex6.Exceptions.IllegalCodeException;
 
