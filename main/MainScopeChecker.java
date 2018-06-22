@@ -33,7 +33,7 @@ public class MainScopeChecker extends ScopeChecker {
 
                 //Variable declaration
                 if (firstWord.matches(variableReservedRegex)) {
-                    Matcher variableBeginningMatcher = variableStartPattern.matcher(line);
+                    Matcher variableBeginningMatcher = VARIABLE_PATTERN.matcher(line);
                     String type = variableBeginningMatcher.group(x);
                     boolean isFinal = variableBeginningMatcher.group(FIRST_WORD_INDEX).equals(FINAL);
 

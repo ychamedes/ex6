@@ -66,7 +66,7 @@ public class ScopeChecker {
                     String type = variableBeginningMatcher.group(x);
                     boolean isFinal = variableBeginningMatcher.group(FIRST_WORD_INDEX).equals(FINAL);
 
-                    Matcher variableNameMatcher = variableNamePattern.matcher(line);
+                    Matcher variableNameMatcher = VARIABLE_PATTERN.matcher(line);
 
                     while(variableNameMatcher.find()){
                         Matcher variableAssignmentMatcher = variableAssignmentPattern.matcher(variableNameMatcher.group());
