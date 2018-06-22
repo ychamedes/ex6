@@ -1,11 +1,12 @@
-package oop.ex6.main;
+package ex6.main;
 
-import oop.ex6.Exceptions.*;
+import ex6.Exceptions.*;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.regex.Pattern;
 
 /**
  * Sjavac class that functions as a code verifier for s-Java files.
@@ -23,6 +24,26 @@ public class Sjavac {
     private static final String ERROR = " Error: ";
     private static final String INVALID_NUMBER_OF_ARGUMENTS = "Invalid number of arguments";
     private static final String UNKNOWN_ERROR = "Unknown Error";
+
+    /** Pattern for the first non-whitespace sequence. */
+    static final Pattern FIRST_WORD_PATTERN = Pattern.compile("\\S+");
+
+    /** Pattern for variable(s) declaration, including possible final keyword and initialization.*/
+    static final Pattern VARIABLE_PATTERN = Pattern.compile("\\s*((final)\\s+)?(int|double|String|boolean|char)\\s+(?!final)((_\\w+|[a-zA-Z]\\w*)\\s*(=\\s*(true|false|\\\"\\w*\\\"|\\d+(\\.\\d+)?|_\\w+|[a-zA-Z]\\w*))?\\s*)(,\\s*(_\\w+|[a-zA-Z]\\w*)\\s*(=\\s*(true|false|\\\"\\w*\\\"|\\d+(\\.\\d+)?|_\\w+|[a-zA-Z]\\w*))?\\s*)*;\\s*");
+
+    /** Pattern for method declaration, including the void keyword and valid parameter conditions. */
+    static final Pattern METHOD_PATTERN = Pattern.compile("\\s*void\\s+([a-zA-Z]\\w*)\\s*\\((\\s*(final\\s+)?(int|double|String|boolean|char)\\s+(_\\w+|[a-zA-Z]\\w*)\\s*)?(,\\s*(final\\s+)?(int|double|String|boolean|char)\\s+(_\\w+|[a-zA-Z]\\w*)\\s*)*\\)\\s*\\{\\s*");
+
+    /** Regex options of reserved words for command flow statements. */
+    static final String CONTROL_FLOW_REGEX = "if|while";
+
+    /** Pattern for control flow (if/while) statement with valid condition type. */
+    static final Pattern CONTROL_FLOW_PATTERN = Pattern.compile("\\s*(if|while)\\s*\\(\\s*(\\w+\\s*(\\|\\||&&))*\\s*\\w+\\s*\\)\\s*\\{\\s*");
+
+    /** Pattern for a return line, which should be by itself. */
+    static final Pattern RETURN_PATTERN = Pattern.compile("\\s*return;\\s*");
+
+
 
 
     private String sourceFilePath;

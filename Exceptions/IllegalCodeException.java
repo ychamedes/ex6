@@ -1,4 +1,4 @@
-package oop.ex6.Exceptions;
+package ex6.Exceptions;
 
 public class IllegalCodeException extends Exception {
 }

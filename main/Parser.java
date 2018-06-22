@@ -1,4 +1,4 @@
-package oop.ex6.main;
+package ex6.main;
 
 /**
  * Parser class that is used to break down and a file of s-Java code.

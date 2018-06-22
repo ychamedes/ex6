@@ -1,9 +1,11 @@
-package oop.ex6.main;
+package ex6.main;
 
-import oop.ex6.Exceptions.IllegalCodeException;
+import ex6.Exceptions.IllegalCodeException;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static ex6.main.Sjavac.*;
 
 /**
  * SyntaxChecker class checks that there are no violations of syntax in the code.
@@ -17,14 +19,8 @@ public class SyntaxChecker {
     /** Regex options of reserved words the can begin method declaration. */
     static final String METHOD_DECLARATION_REGEX = "void";
 
-    /** Regex options of reserved words for command flow statements. */
-    static final String CONTROL_FLOW_REGEX = "if|while";
-
     /** Reserved word for return statement in method. */
     static final String METHOD_RETURN_KEYWORD = "return";
-
-    /** Pattern for the first non-whitespace sequence. */
-    static final Pattern FIRST_WORD_PATTERN = Pattern.compile("\\S+");
 
     /** Pattern for a blank line in the code. */
     static final Pattern BLANK_LINE_PATTERN = Pattern.compile("\\s*");
@@ -37,18 +33,6 @@ public class SyntaxChecker {
 
     /** Pattern for valid non-reserved word sequences: closing curly brace, variable initialization, and method calling. */
     static final Pattern NON_RESERVED_PATTERN = Pattern.compile("\\s*(}|(_\\w+|[a-zA-Z]\\w*)\\s*=\\s*(true|false|\\\"\\w*\\\"|\\d+(\\.\\d+)?|_\\w+|[a-zA-Z]\\w*)\\s*;|([a-zA-Z]\\w*)\\s*\\(\\s*((_\\w+|[a-zA-Z]\\w*)\\s*)?(,\\s*(_\\w+|[a-zA-Z]\\w*)\\s*)*\\)\\s*;)\\s*");
-
-    /** Pattern for variable(s) declaration, including possible final keyword and initialization.*/
-    static final Pattern VARIABLE_PATTERN = Pattern.compile("\\s*((final)\\s+)?(int|double|String|boolean|char)\\s+(?!final)((_\\w+|[a-zA-Z]\\w*)\\s*(=\\s*(true|false|\\\"\\w*\\\"|\\d+(\\.\\d+)?|_\\w+|[a-zA-Z]\\w*))?\\s*)(,\\s*(_\\w+|[a-zA-Z]\\w*)\\s*(=\\s*(true|false|\\\"\\w*\\\"|\\d+(\\.\\d+)?|_\\w+|[a-zA-Z]\\w*))?\\s*)*;\\s*");
-
-    /** Pattern for control flow (if/while) statement with valid condition type. */
-    static final Pattern CONTROL_FLOW_PATTERN = Pattern.compile("\\s*(if|while)\\s*\\(\\s*(\\w+\\s*(\\|\\||&&))*\\s*\\w+\\s*\\)\\s*\\{\\s*");
-
-    /** Pattern for method declaration, including the void keyword and valid parameter conditions. */
-    static final Pattern METHOD_PATTERN = Pattern.compile("\\s*void\\s+([a-zA-Z]\\w*)\\s*\\((\\s*(final\\s+)?(int|double|String|boolean|char)\\s+(_\\w+|[a-zA-Z]\\w*)\\s*)?(,\\s*(final\\s+)?(int|double|String|boolean|char)\\s+(_\\w+|[a-zA-Z]\\w*)\\s*)*\\)\\s*\\{\\s*");
-
-    /** Pattern for a return line, which should be by itself. */
-    static final Pattern RETURN_PATTERN = Pattern.compile("\\s*return;\\s*");
 
     /** Pattern for the end of each line, which either be a semicolon, or open or closed curly brace. */
     static final Pattern END_OF_LINE_PATTERN = Pattern.compile("[;\\{\\}]\\s*$");

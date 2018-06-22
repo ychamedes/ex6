@@ -1,9 +1,8 @@
-package oop.ex6.Scopes;
+package ex6.Scopes;
 
 import ex6.Exceptions.IllegalCodeException;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Queue;
 
 /**
@@ -14,10 +13,10 @@ public class Scope {
     private ArrayList<String> scopeLines;
 
     /** List of the data elements in the scope. */
-    private HashMap<String, String> variables;
+    private ArrayList<Variable> variables;
 
     /** List of global variables shared by all scopes*/
-    private static HashMap<String, String> globals;
+    private static ArrayList<Variable> globals;
 
     /** The parent scope of the scope. */
     private Scope parentScope;
@@ -38,11 +37,15 @@ public class Scope {
         return scopeLines;
     }
 
-    public HashMap<String, String> getVariables(){
+    public ArrayList<Variable> getVariables(){
         return variables;
     }
 
-    public void addVariable(String type, String name, String value) throws IllegalCodeException{
+    public void addVariable(Variable variable) throws IllegalCodeException{
+
+    }
+
+    public void addGlobalVariable(Variable variable) throws IllegalCodeException{
 
     }
 
