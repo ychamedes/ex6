@@ -43,7 +43,7 @@ public class MainScopeChecker extends ScopeChecker {
                         Matcher variableAssignmentMatcher = variableAssignmentPattern.matcher
                                 (variableNameMatcher.group());
                         String value = variableAssignmentMatcher.group();
-                        scope.addGlobalVariable(new Variable(type, variableNameMatcher.group(), value,
+                        scope.addVariable(new Variable(type, variableNameMatcher.group(), value,
                                 isFinal));
                     }
                 }

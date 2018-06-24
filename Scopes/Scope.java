@@ -1,6 +1,7 @@
 package ex6.Scopes;
 
 import ex6.Exceptions.IllegalCodeException;
+import ex6.main.VariableChecker;
 
 import java.util.ArrayList;
 import java.util.Queue;
@@ -41,15 +42,19 @@ public class Scope {
         return variables;
     }
 
-    public void addVariable(Variable variable) throws IllegalCodeException{
-
+    public void addVariable(Variable variable) throws IllegalCodeException {
+        for (Variable existingVar : variables) {
+            if (existingVar.getName().equals(variable.getName())) {
+                throw new IllegalCodeException();
+            }
+        }
+        VariableChecker.checkVariable(variable);
+        variables.add(variable);
     }
 
-    public void addGlobalVariable(Variable variable) throws IllegalCodeException{
+    public void addSubscope(ArrayList<String> scopeLines){
 
     }
-
-    public void addSubscope(ArrayList<String>)
 
 
 }

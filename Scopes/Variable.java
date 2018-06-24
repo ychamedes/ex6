@@ -25,7 +25,7 @@ public class Variable{
         this.isFinal = isFinal;
     }
 
-    String getType(){
+    public String getType(){
         return type;
     }
 
@@ -33,7 +33,7 @@ public class Variable{
         return name;
     }
 
-    String getValue(){
+    public String getValue(){
         return value;
     }
 

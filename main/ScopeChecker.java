@@ -85,8 +85,6 @@ public class ScopeChecker {
                         Matcher controlFlowMatcher = CONTROL_FLOW_PATTERN.matcher(line);
                         if(controlFlowMatcher.find()){
                             conditionChecker(controlFlowMatcher.group(CONDITION_CAPTURING_GROUP));
-                            //CHECK THE GROUP NUMBER WITH JASON
-
                         }
                         else{
                             throw new IllegalCodeException();
@@ -131,7 +129,7 @@ public class ScopeChecker {
     }
 
     private void methodEndingChecker(String returnLine, String closingLine){
-        if(!(returnLine.matches("return regex") && closingLine.matches("} regex")))
+        if(!(returnLine.matches("return regex") && closingLine.matches("} regex")));
     }
 
     protected boolean isExistingMethod(String methodName){
