@@ -31,6 +31,7 @@ public class ScopeChecker {
     private final static int LAST_LINE_INDEX = -2;
     private final static int RETURN_LINE_INDEX = -3;
     private final static int CONDITION_CAPTURING_GROUP = 2;
+    private final static int TYPE_CAPTURING_GROUP = 3;
 
 
     protected static Stack<Scope> scopeStack= new Stack<>();
@@ -41,7 +42,7 @@ public class ScopeChecker {
     }
 
 
-    void checkScope(Scope scope) throws IllegalCodeException {
+    static void checkScope(Scope scope) throws IllegalCodeException {
         int bracketBalance = STARTING_BRACKET_BALANCE;
 
         ArrayList<String> tempSubscope = new ArrayList<>();
@@ -63,7 +64,7 @@ public class ScopeChecker {
                 //Variable declaration
                 if (firstWord.matches(variableReservedRegex)) {
                     Matcher variableBeginningMatcher = variableStartPattern.matcher(line);
-                    String type = variableBeginningMatcher.group(x);
+                    String type = variableBeginningMatcher.group(TYPE_CAPTURING_GROUP);
                     boolean isFinal = variableBeginningMatcher.group(FIRST_WORD_INDEX).equals(FINAL);
 
                     Matcher variableNameMatcher = VARIABLE_PATTERN.matcher(line);
@@ -119,20 +120,20 @@ public class ScopeChecker {
         }
     }
 
-    private void conditionChecker(String condition){
+    private static void conditionChecker(String condition){
 
     }
 
-    protected boolean isScopeMethod(String firstLine){
+    protected static boolean isScopeMethod(String firstLine){
         Matcher methodMatcher = METHOD_PATTERN.matcher(firstLine);
         return methodMatcher.matches();
     }
 
-    private void methodEndingChecker(String returnLine, String closingLine){
-        if(!(returnLine.matches("return regex") && closingLine.matches("} regex")));
+    private static void methodEndingChecker(String returnLine, String closingLine){
+        if(!(returnLine.matches(RETURN_REGEX) && closingLine.matches(CLOSING_BRACKET_REGEX)));
     }
 
-    protected boolean isExistingMethod(String methodName){
+    protected static boolean isExistingMethod(String methodName){
         return methods.contains(methodName);
     }
 

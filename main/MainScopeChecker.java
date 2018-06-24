@@ -12,12 +12,15 @@ import static ex6.main.Sjavac.*;
 
 public class MainScopeChecker extends ScopeChecker {
 
-    Scope buildMainScope(String[] lines){
-        return new Scope(new ArrayList<String>(Arrays.asList(lines)));
+    private final static int TYPE_CAPTURING_GROUP = 3;
+
+
+    static Scope buildMainScope(String[] lines){
+        return new Scope(new ArrayList<>(Arrays.asList(lines)));
     }
 
 
-    void checkMainScope(Scope scope) throws IllegalCodeException{
+    static void checkMainScope(Scope scope) throws IllegalCodeException{
         int bracketBalance = STARTING_BRACKET_BALANCE;
         ArrayList<String> lines = scope.getLines();
         ArrayList<String> tempSubscope = new ArrayList<>();
@@ -34,7 +37,7 @@ public class MainScopeChecker extends ScopeChecker {
                 //Variable declaration
                 if (firstWord.matches(variableReservedRegex)) {
                     Matcher variableBeginningMatcher = VARIABLE_PATTERN.matcher(line);
-                    String type = variableBeginningMatcher.group(x);
+                    String type = variableBeginningMatcher.group(TYPE_CAPTURING_GROUP);
                     boolean isFinal = variableBeginningMatcher.group(FIRST_WORD_INDEX).equals(FINAL);
 
                     Matcher variableNameMatcher = variableNamePattern.matcher(line);

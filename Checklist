@@ -30,3 +30,11 @@
     "if not reserved word"
         -Reassign to final
         -Variable used is declared
+
+
+STILL LEFT TO DO 24/06
+-Assigning variables to other variables
+-Finish scope methods/ checker
+-Checking that variable value change exists
+-No changing final variables
+-if/while boolean checking

@@ -1,6 +1,7 @@
 package ex6.main;
 
 import ex6.Exceptions.*;
+import ex6.Scopes.Scope;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -41,7 +42,11 @@ public class Sjavac {
     static final Pattern CONTROL_FLOW_PATTERN = Pattern.compile("\\s*(if|while)\\s*\\(\\s*(\\w+\\s*(\\|\\||&&))*\\s*\\w+\\s*\\)\\s*\\{\\s*");
 
     /** Pattern for a return line, which should be by itself. */
-    static final Pattern RETURN_PATTERN = Pattern.compile("\\s*return;\\s*");
+    static final String RETURN_REGEX = "\\s*return;\\s*";
+
+    /** Pattern for a closing bracket line, which should be by itself. */
+    static final String CLOSING_BRACKET_REGEX = "\\s*}\\s*";
+
 
 
 
@@ -52,7 +57,7 @@ public class Sjavac {
      * Class constructor that receives a source file name.
      * @param sourceFileName the path of the source file.
      */
-    public Sjavac(String sourceFileName){
+    private Sjavac(String sourceFileName){
         sourceFilePath = sourceFileName;
     }
 
@@ -66,14 +71,22 @@ public class Sjavac {
         File sourceFile = new File(sourceFilePath);
 
         try{
+            //Parse the source file and produce an array of lines
             String[] lineArray = parseFile(sourceFile);
 
+            //Check the syntax
             SyntaxChecker.checkSyntax(lineArray);
 
+            //Check scope, variable, logic
+            Scope mainScope = MainScopeChecker.buildMainScope(lineArray);
+            MainScopeChecker.checkMainScope(mainScope);
+
+            //If no exceptions were thrown, print 0
             System.out.println(LEGAL_CODE_OUTPUT);
         }
         catch (IOException error){
             printGeneralError(error.getMessage());
+            error.printStackTrace();
             System.exit(0);
         }
         catch (IllegalCodeException error){
