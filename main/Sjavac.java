@@ -71,8 +71,13 @@ public class Sjavac {
 
     /** Pattern for if a variable is being assigned.
      * Name is second capturing group.
-     * Value is third capturing group. */
+     * Value is fourth capturing group. */
     static final Pattern VARIABLE_ASSIGNMENT_PATTERN = Pattern.compile("(?!final)((_\\w+|[a-zA-Z]\\w*)\\s*(=\\s*(true|false|\\\"\\w*\\\"|\\d+(\\.\\d+)?|_\\w+|[a-zA-Z]\\w*))\\s*),?");
+
+    /** Pattern for when a method is called.
+     * Method name is second capturing group.
+     * Each parameter is fourth capturing group. */
+    static final Pattern METHOD_CALL_PATTERN = Pattern.compile("\\s*(([a-zA-Z]\\w*)\\s*\\(\\s*((_\\w+|[a-zA-Z]\\w*)\\s*)?(,\\s*(_\\w+|[a-zA-Z]\\w*)\\s*)*\\)\\s*;)\\s*");
 
     private String sourceFilePath;
 
