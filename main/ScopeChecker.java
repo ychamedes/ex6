@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Stack;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static oop.ex6.main.Sjavac.*;
 
@@ -108,7 +107,7 @@ public class ScopeChecker {
                         String varName = variableReassignmentMatcher.group(NAME_CAPTURING_GROUP); //Check
                         // capturing group numbers!
                         String varValue = variableReassignmentMatcher.group(VALUE_CAPTURING_GROUP);
-                        if(varValue.matches(VARIA)){ //Pattern should be string?
+                        if(varValue.matches(VARIABLE_NAME_REGEX)){ //Pattern should be string?
                             Variable assigningVar = scope.isExistingVariable(varValue);
                             if(assigningVar == null || assigningVar.getValue() == null){
                                 throw new IllegalCodeException();
