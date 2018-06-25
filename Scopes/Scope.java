@@ -13,7 +13,7 @@ public class Scope {
     private ArrayList<String> scopeLines;
 
     /** List of the data elements in the scope. */
-    private ArrayList<Variable> variables;
+    private ArrayList<Variable> variables = new ArrayList<>();
 
     /** List of global variables shared by all scopes*/
     private static ArrayList<Variable> globals;
@@ -57,11 +57,14 @@ public class Scope {
 
     public Variable isExistingVariable(String name){
         Scope currentScope = this;
-        while(currentScope != null){
+        while(currentScope != null) {
+            System.out.println();
             ArrayList<Variable> currentVariables = currentScope.getVariables();
-            for (Variable existingVar : currentVariables) {
-                if (existingVar.getName().equals(name)) {
-                    return existingVar;
+            if (currentVariables != null) {
+                for (Variable existingVar : currentVariables) {
+                    if (existingVar.getName().equals(name)) {
+                        return existingVar;
+                    }
                 }
             }
             currentScope = currentScope.getParentScope();
