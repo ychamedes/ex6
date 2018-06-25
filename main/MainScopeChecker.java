@@ -46,7 +46,7 @@ public class MainScopeChecker extends ScopeChecker {
 
                     while(variableNameMatcher.find()){
                         Matcher variableAssignmentMatcher = VARIABLE_ASSIGNMENT_PATTERN.matcher(variableNameMatcher.group());
-                        String value = variableAssignmentMatcher.group(ASSIGNMENT_CAPTURING_GROUP);
+                        String value = variableAssignmentMatcher.group(VALUE_CAPTURING_GROUP);
                         scope.addVariable(new Variable(type, variableNameMatcher.group(), value, isFinal));
                     }
                 }
@@ -74,12 +74,12 @@ public class MainScopeChecker extends ScopeChecker {
 
                 //Variable reassignment
                 else{
-                    Matcher variableReassignmentMatcher = VARIABLE_REASSIGNMENT_PATTERN.matcher(line);
+                    Matcher variableReassignmentMatcher = VARIABLE_ASSIGNMENT_PATTERN.matcher(line);
                     if(variableReassignmentMatcher.find()){
                         String varName = variableReassignmentMatcher.group(NAME_CAPTURING_GROUP); //Check
                         // capturing group numbers!
                         String varValue = variableReassignmentMatcher.group(VALUE_CAPTURING_GROUP);
-                        if(varValue.matches(VARIABLE_NAME_REGEX)){ //Pattern should be string?
+                        if(varValue.matches(VARIABLE_NAME_REGEX)){
                             Variable assigningVar = scope.isExistingVariable(varValue);
                             if(assigningVar == null || assigningVar.getValue() == null){
                                 throw new IllegalCodeException();

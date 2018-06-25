@@ -27,14 +27,13 @@ public class ScopeChecker {
 
     protected final static int STARTING_BRACKET_BALANCE = 0;
     protected final static int FINAL_CAPTURING_GROUP = 2;
-    protected final static int ASSIGNMENT_CAPTURING_GROUP = 2;
     private final static int FIRST_LINE_INDEX = 0;
     private final static int LAST_LINE_INDEX = -2;
     private final static int RETURN_LINE_INDEX = -3;
     private final static int CONDITION_CAPTURING_GROUP = 2;
     private final static int TYPE_CAPTURING_GROUP = 3;
-    protected final static int NAME_CAPTURING_GROUP = 0;
-    protected final static int VALUE_CAPTURING_GROUP = 0;
+    protected final static int NAME_CAPTURING_GROUP = 2;
+    protected final static int VALUE_CAPTURING_GROUP = 3;
 
 
 
@@ -52,6 +51,7 @@ public class ScopeChecker {
         ArrayList<String> tempSubscope = new ArrayList<>();
         ArrayList<String> lines = scope.getLines();
 
+        System.out.println(scope.getLines().size());
         if(isScopeMethod(scope.getLines().get(FIRST_LINE_INDEX))){
             methodEndingChecker(lines.get(lines.size() + RETURN_LINE_INDEX), lines.get(lines.size() + LAST_LINE_INDEX));
         }
@@ -74,7 +74,7 @@ public class ScopeChecker {
 
                     while(variableNameMatcher.find()){
                         Matcher variableAssignmentMatcher = VARIABLE_ASSIGNMENT_PATTERN.matcher(variableNameMatcher.group());
-                        String value = variableAssignmentMatcher.group(ASSIGNMENT_CAPTURING_GROUP);
+                        String value = variableAssignmentMatcher.group(VALUE_CAPTURING_GROUP);
                         scope.addVariable(new Variable(type, variableNameMatcher.group(), value, isFinal));
                     }
                 }
@@ -102,12 +102,12 @@ public class ScopeChecker {
 
                 //Variable reassignment
                 else{
-                    Matcher variableReassignmentMatcher = VARIABLE_REASSIGNMENT_PATTERN.matcher(line);
+                    Matcher variableReassignmentMatcher = VARIABLE_ASSIGNMENT_PATTERN.matcher(line);
                     if(variableReassignmentMatcher.find()){
                         String varName = variableReassignmentMatcher.group(NAME_CAPTURING_GROUP); //Check
                         // capturing group numbers!
                         String varValue = variableReassignmentMatcher.group(VALUE_CAPTURING_GROUP);
-                        if(varValue.matches(VARIABLE_NAME_REGEX)){ //Pattern should be string?
+                        if(varValue.matches(VARIABLE_NAME_REGEX)){
                             Variable assigningVar = scope.isExistingVariable(varValue);
                             if(assigningVar == null || assigningVar.getValue() == null){
                                 throw new IllegalCodeException();

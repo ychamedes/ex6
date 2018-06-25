@@ -32,9 +32,6 @@ public class Sjavac {
     /** Pattern for variable(s) declaration, including possible final keyword and initialization.*/
     static final Pattern VARIABLE_PATTERN = Pattern.compile("\\s*((final)\\s+)?(int|double|String|boolean|char)\\s+(?!final)((_\\w+|[a-zA-Z]\\w*)\\s*(=\\s*(true|false|\\\"\\w*\\\"|\\d+(\\.\\d+)?|_\\w+|[a-zA-Z]\\w*))?\\s*)(,\\s*(_\\w+|[a-zA-Z]\\w*)\\s*(=\\s*(true|false|\\\"\\w*\\\"|\\d+(\\.\\d+)?|_\\w+|[a-zA-Z]\\w*))?\\s*)*;\\s*");
 
-    /** Pattern for variable(s) declaration, including possible final keyword and initialization.*/
-    static final Pattern VARIABLE_REASSIGNMENT_PATTERN = Pattern.compile("");
-
     /** Pattern for method declaration, including the void keyword and valid parameter conditions. */
     static final Pattern METHOD_PATTERN = Pattern.compile("\\s*void\\s+([a-zA-Z]\\w*)\\s*\\((\\s*(final\\s+)?(int|double|String|boolean|char)\\s+(_\\w+|[a-zA-Z]\\w*)\\s*)?(,\\s*(final\\s+)?(int|double|String|boolean|char)\\s+(_\\w+|[a-zA-Z]\\w*)\\s*)*\\)\\s*\\{\\s*");
 
@@ -73,9 +70,9 @@ public class Sjavac {
     static final String VARIABLE_NAME_REGEX = "_\\w+|[a-zA-Z]\\w*";
 
     /** Pattern for if a variable is being assigned.
-     * Value is second capturing group. */
-    static final Pattern VARIABLE_ASSIGNMENT_PATTERN = Pattern.compile("(=\\s*(true|false|\\\"\\w*\\\"|\\d+(\\.\\d+)?|_\\w+|[a-zA-Z]\\w*))\\s*,");
-
+     * Name is second capturing group.
+     * Value is third capturing group. */
+    static final Pattern VARIABLE_ASSIGNMENT_PATTERN = Pattern.compile("(?!final)((_\\w+|[a-zA-Z]\\w*)\\s*(=\\s*(true|false|\\\"\\w*\\\"|\\d+(\\.\\d+)?|_\\w+|[a-zA-Z]\\w*))\\s*),?");
 
     private String sourceFilePath;
 
