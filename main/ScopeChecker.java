@@ -156,7 +156,6 @@ public class ScopeChecker {
             String currentCondition = conditionMatcher.group();
             if(!currentCondition.matches(BOOLEAN_REGEX)){
                 try{
-                    Integer.parseInt(currentCondition);
                     Double.parseDouble(currentCondition);
                 }
                 catch (NumberFormatException numE){

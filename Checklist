@@ -34,7 +34,6 @@
 
 STILL LEFT TO DO 25/06
 -Finish scope methods/ checker
--if/while boolean checking
 -Make method parameters local variables
 -Method call
 -Allow boolean to take double or int

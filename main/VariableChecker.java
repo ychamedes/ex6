@@ -2,7 +2,6 @@ package ex6.main;
 
 import ex6.Exceptions.IllegalCodeException;
 import ex6.Scopes.Variable;
-import ex6.main.*;
 
 public class VariableChecker {
 
@@ -26,7 +25,12 @@ public class VariableChecker {
         switch(type){
             case(BOOLEAN): {
                 if (!value.matches(BOOLEAN_VALUE_REGEX)) {
-                    throw new IllegalCodeException();
+                    try{
+                        Double.parseDouble(value);
+                    }
+                    catch (NumberFormatException) {
+                        throw new IllegalCodeException();
+                    }
                 }
             }
             case(STRING):{
@@ -36,7 +40,7 @@ public class VariableChecker {
             }
             case(DOUBLE):{
                 try{
-                    double parsedValue = Double.parseDouble(value);
+                    Double.parseDouble(value);
                 }
                 catch (NumberFormatException numE){
                     throw new IllegalCodeException();
@@ -51,7 +55,7 @@ public class VariableChecker {
             }
             case(INT):{
                 try{
-                    int parsedValue = Integer.parseInt(value);
+                    Integer.parseInt(value);
                 }
                 catch (NumberFormatException numE){
                     throw new IllegalCodeException();
