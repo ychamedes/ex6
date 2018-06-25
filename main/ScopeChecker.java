@@ -125,6 +125,9 @@ public class ScopeChecker {
                             VariableChecker.checkVariable(oldVar);
                         }
                     }
+                    else{
+                        throw new IllegalCodeException();
+                    }
                 }
 
             } else {
