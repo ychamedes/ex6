@@ -107,7 +107,8 @@ public class MainScopeChecker extends ScopeChecker {
                 if(line.matches(CLOSING_BRACKET_REGEX)){
                     bracketBalance--;
                     if(bracketBalance == 0){
-                        scopeStack.push(new Scope(tempSubscope, scope));
+                        ArrayList<String> childScopeLines = new ArrayList<>(tempSubscope);
+                        scopeStack.push(new Scope(childScopeLines, scope));
                         tempSubscope.clear();
                     }
                 }
