@@ -22,12 +22,6 @@ public class SyntaxChecker {
     /** Reserved word for return statement in method. */
     static final String METHOD_RETURN_KEYWORD = "return";
 
-    /** Pattern for a blank line in the code. */
-    static final Pattern BLANK_LINE_PATTERN = Pattern.compile("\\s*");
-
-    /** Pattern for a comment line in the code. */
-    static final Pattern COMMENT_PATTERN = Pattern.compile("\\/\\/");
-
     /** Pattern for a reserved word. */
     static final Pattern RESERVED_WORD_PATTERN = Pattern.compile("^\\s*(int|double|String|boolean|char|final|void|if|while|true|false|return)");
 
