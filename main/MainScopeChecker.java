@@ -35,8 +35,12 @@ public class MainScopeChecker extends ScopeChecker {
                 //Variable declaration
                 if (firstWord.matches(VARIABLE_RESERVED_REGEX)) {
                     Matcher variableBeginningMatcher = VARIABLE_PATTERN.matcher(line);
-                    String type = variableBeginningMatcher.group(TYPE_CAPTURING_GROUP);
-                    boolean isFinal = variableBeginningMatcher.group(FINAL_CAPTURING_GROUP).equals(FINAL);
+                    String type = null;
+                    boolean isFinal = false;
+                    if(variableBeginningMatcher.matches()) {
+                        type = variableBeginningMatcher.group(TYPE_CAPTURING_GROUP);
+                        isFinal = variableBeginningMatcher.group(FINAL_CAPTURING_GROUP) != null;
+                    }
 
                     Matcher variableNameMatcher = VARIABLE_START_PATTERN.matcher(line);
 

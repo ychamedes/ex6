@@ -93,7 +93,6 @@ public class Sjavac {
      */
     private void validateCode(){
 
-
         File sourceFile = new File(sourceFilePath);
 
         try{
