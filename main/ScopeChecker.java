@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Stack;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static ex6.main.Sjavac.*;
 
@@ -179,8 +180,12 @@ public class ScopeChecker {
         return methodMatcher.matches();
     }
 
-    private static void methodEndingChecker(String returnLine, String closingLine){
-        if(!(returnLine.matches(RETURN_REGEX) && closingLine.matches(CLOSING_BRACKET_REGEX)));
+    private static void methodEndingChecker(String returnLine, String closingLine) throws IllegalCodeException{
+        Matcher returnMatcher = RETURN_PATTERN.matcher(returnLine);
+        Matcher closingMatcher = CLOSING_BRACKET_PATTERN.matcher(closingLine);
+        if(!(returnMatcher.matches() && closingMatcher.matches())){
+            throw new IllegalCodeException();
+        }
     }
 
     protected static boolean isExistingMethod(String methodName){

@@ -36,4 +36,3 @@ STILL LEFT TO DO 25/06
 -Finish scope methods/ checker
 -Make method parameters local variables
 -Method call
--Allow boolean to take double or int

@@ -51,10 +51,10 @@ public class Sjavac {
     static final Pattern CONTROL_FLOW_PATTERN = Pattern.compile("\\s*(if|while)\\s*\\(\\s*(\\w+\\s*(\\|\\||&&))*\\s*\\w+\\s*\\)\\s*\\{\\s*");
 
     /** Pattern for a return line, which should be by itself. */
-    static final String RETURN_REGEX = "\\s*return;\\s*";
+    static final Pattern RETURN_PATTERN = Pattern.compile("\\s*return;\\s*");
 
     /** Pattern for a closing bracket line, which should be by itself. */
-    static final String CLOSING_BRACKET_REGEX = "\\s*}\\s*";
+    static final Pattern CLOSING_BRACKET_PATTERN = Pattern.compile("\\s*}\\s*");
 
 
 
