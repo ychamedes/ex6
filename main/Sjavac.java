@@ -51,7 +51,7 @@ public class Sjavac {
     
     /** Regex for a return line, which should be by itself. */
     static final String RETURN_REGEX = "\\s*return;\\s*";
-
+    
     /** Pattern for a return line, which should be by itself. */
     static final Pattern RETURN_PATTERN = Pattern.compile("\\s*return;\\s*");
 
