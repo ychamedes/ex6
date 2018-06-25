@@ -32,11 +32,20 @@ public class Sjavac {
     /** Pattern for variable(s) declaration, including possible final keyword and initialization.*/
     static final Pattern VARIABLE_PATTERN = Pattern.compile("\\s*((final)\\s+)?(int|double|String|boolean|char)\\s+(?!final)((_\\w+|[a-zA-Z]\\w*)\\s*(=\\s*(true|false|\\\"\\w*\\\"|\\d+(\\.\\d+)?|_\\w+|[a-zA-Z]\\w*))?\\s*)(,\\s*(_\\w+|[a-zA-Z]\\w*)\\s*(=\\s*(true|false|\\\"\\w*\\\"|\\d+(\\.\\d+)?|_\\w+|[a-zA-Z]\\w*))?\\s*)*;\\s*");
 
+    /** Pattern for variable(s) declaration, including possible final keyword and initialization.*/
+    static final Pattern VARIABLE_REASSIGNMENT_PATTERN = Pattern.compile("");
+
     /** Pattern for method declaration, including the void keyword and valid parameter conditions. */
     static final Pattern METHOD_PATTERN = Pattern.compile("\\s*void\\s+([a-zA-Z]\\w*)\\s*\\((\\s*(final\\s+)?(int|double|String|boolean|char)\\s+(_\\w+|[a-zA-Z]\\w*)\\s*)?(,\\s*(final\\s+)?(int|double|String|boolean|char)\\s+(_\\w+|[a-zA-Z]\\w*)\\s*)*\\)\\s*\\{\\s*");
 
     /** Regex options of reserved words for command flow statements. */
     static final String CONTROL_FLOW_REGEX = "if|while";
+
+    /** Regex options of reserved boolean words for command flow conditions. */
+    static final String BOOLEAN_REGEX = "true|false";
+
+    /** Regex options of reserved boolean words for command flow conditions. */
+    static final String BOOLEAN_TYPE_REGEX = "boolean|double|int";
 
     /** Pattern for control flow (if/while) statement with valid condition type. */
     static final Pattern CONTROL_FLOW_PATTERN = Pattern.compile("\\s*(if|while)\\s*\\(\\s*(\\w+\\s*(\\|\\||&&))*\\s*\\w+\\s*\\)\\s*\\{\\s*");

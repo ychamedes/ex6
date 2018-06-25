@@ -56,28 +56,23 @@ public class SyntaxChecker {
                         /* Check every line according to a specific format, that it follows that format. */
                         // Variable declaration
                         if (firstWord.matches(VARIABLE_DECLARATION_WORDS_REGEX) && !variableSyntaxCheck(line)) {
-                            System.out.println("VARIABLE");
                             throw new IllegalCodeException();
                         }
                         // Control Flow block
                         if (firstWord.matches(CONTROL_FLOW_REGEX) && !controlFlowSyntaxCheck(line)) {
-                            System.out.println("FLOW");
                             throw new IllegalCodeException();
                         }
                         // Method declaration
                         if (firstWord.matches(METHOD_DECLARATION_REGEX) && !methodSyntaxCheck(line)) {
-                            System.out.println("METHOD");
                             throw new IllegalCodeException();
                         }
                         // Return case
                         if (firstWord.matches(METHOD_RETURN_KEYWORD) && !returnLineCheck(line)) {
-                            System.out.println("RETURN");
                             throw new IllegalCodeException();
                         }
                     }
                     // Check syntax of cases without reserved words
                     else if (!nonReservedWordCheck(line)) {
-                        System.out.println("NON-RESERVED");
                         throw new IllegalCodeException();
                     }
                 }

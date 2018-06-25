@@ -38,18 +38,36 @@ public class Scope {
         return scopeLines;
     }
 
+    public Scope getParentScope(){
+        return parentScope;
+    }
+
     public ArrayList<Variable> getVariables(){
         return variables;
     }
 
     public void addVariable(Variable variable) throws IllegalCodeException {
-        for (Variable existingVar : variables) {
-            if (existingVar.getName().equals(variable.getName())) {
-                throw new IllegalCodeException();
-            }
+        if(isExistingVariable(variable.getName()) != null){
+            throw new IllegalCodeException();
         }
-        VariableChecker.checkVariable(variable);
-        variables.add(variable);
+        else {
+            VariableChecker.checkVariable(variable);
+            variables.add(variable);
+        }
+    }
+
+    public Variable isExistingVariable(String name){
+        Scope currentScope = this;
+        while(currentScope != null){
+            ArrayList<Variable> currentVariables = currentScope.getVariables();
+            for (Variable existingVar : currentVariables) {
+                if (existingVar.getName().equals(name)) {
+                    return existingVar;
+                }
+            }
+            currentScope = currentScope.getParentScope();
+        }
+        return null;
     }
 
     public void addSubscope(ArrayList<String> scopeLines){

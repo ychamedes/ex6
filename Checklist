@@ -32,9 +32,9 @@
         -Variable used is declared
 
 
-STILL LEFT TO DO 24/06
--Assigning variables to other variables
+STILL LEFT TO DO 25/06
 -Finish scope methods/ checker
--Checking that variable value change exists
--No changing final variables
 -if/while boolean checking
+-Make method parameters local variables
+-Method call
+-Allow boolean to take double or int

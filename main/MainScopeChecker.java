@@ -71,6 +71,33 @@ public class MainScopeChecker extends ScopeChecker {
                         }
                     }
                 }
+
+                //Variable reassignment
+                else{
+                    Matcher variableReassignmentMatcher = VARIABLE_REASSIGNMENT_PATTERN.matcher(line);
+                    if(variableReassignmentMatcher.find()){
+                        String varName = variableReassignmentMatcher.group(NAME_CAPTURING_GROUP); //Check
+                        // capturing group numbers!
+                        String varValue = variableReassignmentMatcher.group(VALUE_CAPTURING_GROUP);
+                        if(varValue.matches(variableNamePattern)){ //Pattern should be string?
+                            Variable assigningVar = scope.isExistingVariable(varValue);
+                            if(assigningVar == null || assigningVar.getValue() == null){
+                                throw new IllegalCodeException();
+                            }
+                            else{
+                                varValue = assigningVar.getValue();
+                            }
+                        }
+                        Variable oldVar = scope.isExistingVariable(varName);
+                        if(oldVar == null || oldVar.isVariableFinal()){
+                            throw new IllegalCodeException();
+                        }
+                        else{
+                            oldVar.setValue(varValue);
+                            VariableChecker.checkVariable(oldVar);
+                        }
+                    }
+                }
             }
             else{
                 tempSubscope.add(line);

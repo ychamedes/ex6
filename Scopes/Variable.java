@@ -37,4 +37,12 @@ public class Variable{
         return value;
     }
 
+    public void setValue(String newValue){
+        value = newValue;
+    }
+
+    public boolean isVariableFinal(){
+        return isFinal;
+    }
+
 }
