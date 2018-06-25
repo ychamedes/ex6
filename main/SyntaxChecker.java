@@ -1,11 +1,11 @@
-package ex6.main;
+package oop.ex6.main;
 
-import ex6.Exceptions.IllegalCodeException;
+import oop.ex6.Exceptions.IllegalCodeException;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static ex6.main.Sjavac.*;
+import static oop.ex6.main.Sjavac.*;
 
 /**
  * SyntaxChecker class checks that there are no violations of syntax in the code.
@@ -37,6 +37,9 @@ public class SyntaxChecker {
     /** Pattern for the end of each line, which either be a semicolon, or open or closed curly brace. */
     static final Pattern END_OF_LINE_PATTERN = Pattern.compile("[;\\{\\}]\\s*$");
 
+    /** Pattern for a return line, which should be by itself. */
+    static final Pattern RETURN_PATTERN = Pattern.compile("\\s*return;\\s*");
+
     /** Pattern for illegal tokens or sequence in the code: operators and alternate comment patterns. */
     static final Pattern ILLEGAL_TOKENS_PATTERN = Pattern.compile("\\/\\*{1,2}.*\\*\\/|[-\\+\\*]");
 
@@ -56,28 +59,23 @@ public class SyntaxChecker {
                         /* Check every line according to a specific format, that it follows that format. */
                         // Variable declaration
                         if (firstWord.matches(VARIABLE_DECLARATION_WORDS_REGEX) && !variableSyntaxCheck(line)) {
-                            System.out.println("VARIABLE");
                             throw new IllegalCodeException();
                         }
                         // Control Flow block
                         if (firstWord.matches(CONTROL_FLOW_REGEX) && !controlFlowSyntaxCheck(line)) {
-                            System.out.println("FLOW");
                             throw new IllegalCodeException();
                         }
                         // Method declaration
                         if (firstWord.matches(METHOD_DECLARATION_REGEX) && !methodSyntaxCheck(line)) {
-                            System.out.println("METHOD");
                             throw new IllegalCodeException();
                         }
                         // Return case
                         if (firstWord.matches(METHOD_RETURN_KEYWORD) && !returnLineCheck(line)) {
-                            System.out.println("RETURN");
                             throw new IllegalCodeException();
                         }
                     }
                     // Check syntax of cases without reserved words
                     else if (!nonReservedWordCheck(line)) {
-                        System.out.println("NON-RESERVED");
                         throw new IllegalCodeException();
                     }
                 }

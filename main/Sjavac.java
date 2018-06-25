@@ -1,7 +1,7 @@
-package ex6.main;
+package oop.ex6.main;
 
-import ex6.Exceptions.*;
-import ex6.Scopes.Scope;
+import oop.ex6.Exceptions.*;
+import oop.ex6.Scopes.Scope;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -32,23 +32,49 @@ public class Sjavac {
     /** Pattern for variable(s) declaration, including possible final keyword and initialization.*/
     static final Pattern VARIABLE_PATTERN = Pattern.compile("\\s*((final)\\s+)?(int|double|String|boolean|char)\\s+(?!final)((_\\w+|[a-zA-Z]\\w*)\\s*(=\\s*(true|false|\\\"\\w*\\\"|\\d+(\\.\\d+)?|_\\w+|[a-zA-Z]\\w*))?\\s*)(,\\s*(_\\w+|[a-zA-Z]\\w*)\\s*(=\\s*(true|false|\\\"\\w*\\\"|\\d+(\\.\\d+)?|_\\w+|[a-zA-Z]\\w*))?\\s*)*;\\s*");
 
+    /** Pattern for variable(s) declaration, including possible final keyword and initialization.*/
+    static final Pattern VARIABLE_REASSIGNMENT_PATTERN = Pattern.compile("");
+
     /** Pattern for method declaration, including the void keyword and valid parameter conditions. */
     static final Pattern METHOD_PATTERN = Pattern.compile("\\s*void\\s+([a-zA-Z]\\w*)\\s*\\((\\s*(final\\s+)?(int|double|String|boolean|char)\\s+(_\\w+|[a-zA-Z]\\w*)\\s*)?(,\\s*(final\\s+)?(int|double|String|boolean|char)\\s+(_\\w+|[a-zA-Z]\\w*)\\s*)*\\)\\s*\\{\\s*");
 
     /** Regex options of reserved words for command flow statements. */
     static final String CONTROL_FLOW_REGEX = "if|while";
 
-    /** Pattern for control flow (if/while) statement with valid condition type. */
-    static final Pattern CONTROL_FLOW_PATTERN = Pattern.compile("\\s*(if|while)\\s*\\(\\s*(\\w+\\s*(\\|\\||&&))*\\s*\\w+\\s*\\)\\s*\\{\\s*");
+    /** Pattern for control flow (if/while) statement with valid condition type.
+     * Condition is second capturing group. */
+    static final Pattern CONTROL_FLOW_PATTERN = Pattern.compile("\\s*(if|while)\\s*\\((\\s*(\\w+\\s*(\\|\\||&&))*\\s*\\w+\\s*)\\)\\s*\\{\\s*");
 
-    /** Pattern for a return line, which should be by itself. */
+    /** Pattern for the boolean value of a if/while statement.
+     * Each Condition is first capturing group. */
+    static final Pattern CONDITION_PATTERN = Pattern.compile("(true|false|_\\w+|[a-zA-z]\\w*|-?\\d+(\\.\\d+)?)");
+    
+    /** Regex for a return line, which should be by itself. */
     static final String RETURN_REGEX = "\\s*return;\\s*";
 
+    /** Pattern for a return line, which should be by itself. */
+    static final Pattern RETURN_PATTERN = Pattern.compile("\\s*return;\\s*");
+
+    /** Regex options of reserved boolean words for command flow conditions. */
+    static final String BOOLEAN_REGEX = "true|false";
+
+    /** Regex options of reserved boolean words for command flow conditions. */
+    static final String BOOLEAN_TYPE_REGEX = "boolean|double|int";
+
     /** Pattern for a closing bracket line, which should be by itself. */
-    static final String CLOSING_BRACKET_REGEX = "\\s*}\\s*";
+    static final Pattern CLOSING_BRACKET_PATTERN = Pattern.compile("\\s*}\\s*");
 
+    /** Pattern for the start of a variable.
+     * Final keyword is second capturing group.
+     * Variable type is third capturing group. */
+    static final Pattern VARIABLE_START_PATTERN = Pattern.compile("((final)\\s+)?(int|double|String|boolean|char)");
 
+    /** Pattern for variable(s) name. Variable name is second capturing group.*/
+    static final String VARIABLE_NAME_REGEX = "_\\w+|[a-zA-Z]\\w*";
 
+    /** Pattern for if a variable is being assigned.
+     * Value is second capturing group. */
+    static final Pattern VARIABLE_ASSIGNMENT_PATTERN = Pattern.compile("(=\\s*(true|false|\\\"\\w*\\\"|\\d+(\\.\\d+)?|_\\w+|[a-zA-Z]\\w*))\\s*,");
 
 
     private String sourceFilePath;
@@ -160,7 +186,7 @@ public class Sjavac {
         if (errorMessage == null) {
             errorMessage = UNKNOWN_ERROR;
         }
-        System.out.println(GENERAL_ERROR_OUTPUT);
+        System.err.println(GENERAL_ERROR_OUTPUT);
         System.err.println(ERROR + errorMessage);
         System.exit(0);
     }

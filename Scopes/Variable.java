@@ -1,4 +1,4 @@
-package ex6.Scopes;
+package oop.ex6.Scopes;
 
 /**
  * Variable class represents a variable
@@ -35,6 +35,14 @@ public class Variable{
 
     public String getValue(){
         return value;
+    }
+
+    public void setValue(String newValue){
+        value = newValue;
+    }
+
+    public boolean isVariableFinal(){
+        return isFinal;
     }
 
 }
