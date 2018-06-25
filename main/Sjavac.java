@@ -29,6 +29,12 @@ public class Sjavac {
     /** Pattern for the first non-whitespace sequence. */
     static final Pattern FIRST_WORD_PATTERN = Pattern.compile("\\S+");
 
+    /** Pattern for a blank line in the code. */
+    static final Pattern BLANK_LINE_PATTERN = Pattern.compile("\\s*");
+
+    /** Pattern for a comment line in the code. */
+    static final Pattern COMMENT_PATTERN = Pattern.compile("\\/\\/");
+
     /** Pattern for variable(s) declaration, including possible final keyword and initialization.*/
     static final Pattern VARIABLE_PATTERN = Pattern.compile("\\s*((final)\\s+)?(int|double|String|boolean|char)\\s+(?!final)((_\\w+|[a-zA-Z]\\w*)\\s*(=\\s*(true|false|\\\"\\w*\\\"|\\d+(\\.\\d+)?|_\\w+|[a-zA-Z]\\w*))?\\s*)(,\\s*(_\\w+|[a-zA-Z]\\w*)\\s*(=\\s*(true|false|\\\"\\w*\\\"|\\d+(\\.\\d+)?|_\\w+|[a-zA-Z]\\w*))?\\s*)*;\\s*");
 
@@ -118,6 +124,7 @@ public class Sjavac {
         }
         catch (IllegalCodeException error){
             System.out.println(ILLEGAL_CODE_OUTPUT);
+            error.printStackTrace();
             System.exit(0);
         }
     }
