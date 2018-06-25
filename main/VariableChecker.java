@@ -35,11 +35,13 @@ public class VariableChecker {
                         throw new IllegalCodeException();
                     }
                 }
+                break;
             }
             case(STRING):{
                 if (!value.matches(STRING_VALUE_REGEX)) {
                     throw new IllegalCodeException();
                 }
+                break;
             }
             case(DOUBLE):{
                 try{
@@ -48,13 +50,13 @@ public class VariableChecker {
                 catch (NumberFormatException numE){
                     throw new IllegalCodeException();
                 }
-
+                break;
             }
             case(CHAR):{
                 if (!value.matches(CHAR_VALUE_REGEX)) {
                     throw new IllegalCodeException();
                 }
-
+                break;
             }
             case(INT):{
                 try{
@@ -63,6 +65,7 @@ public class VariableChecker {
                 catch (NumberFormatException numE){
                     throw new IllegalCodeException();
                 }
+                break;
             }
             default:{
                 throw new IllegalCodeException();
