@@ -34,6 +34,7 @@ public class ScopeChecker {
     private final static int TYPE_CAPTURING_GROUP = 3;
     protected final static int NAME_CAPTURING_GROUP = 2;
     protected final static int VALUE_CAPTURING_GROUP = 3;
+    private final static int MINIMUM_METHOD_LINES = 3;
 
 
 
@@ -51,9 +52,13 @@ public class ScopeChecker {
         ArrayList<String> tempSubscope = new ArrayList<>();
         ArrayList<String> lines = scope.getLines();
 
-        System.out.println(scope.getLines().size());
         if(isScopeMethod(scope.getLines().get(FIRST_LINE_INDEX))){
-            methodEndingChecker(lines.get(lines.size() + RETURN_LINE_INDEX), lines.get(lines.size() + LAST_LINE_INDEX));
+            if(lines.size() <= MINIMUM_METHOD_LINES){
+                throw new IllegalCodeException();
+            }
+            else {
+                methodEndingChecker(lines.get(lines.size() + RETURN_LINE_INDEX), lines.get(lines.size() + LAST_LINE_INDEX));
+            }
         }
 
         for (String line : scope.getLines()) {
@@ -99,6 +104,11 @@ public class ScopeChecker {
                         tempSubscope.add(line);
                     }
                 }
+
+//                //Method call
+//                else if (line.matches(METHOD_CALL_REGEX)) {
+//                    Matcher methodCallMatcher = METHOD_CALL_PATTERN.matcher(line);
+//                }
 
                 //Variable reassignment
                 else{
