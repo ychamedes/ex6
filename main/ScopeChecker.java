@@ -28,12 +28,12 @@ public class ScopeChecker {
     protected final static int STARTING_BRACKET_BALANCE = 0;
     protected final static int FINAL_CAPTURING_GROUP = 2;
     private final static int FIRST_LINE_INDEX = 0;
-    private final static int LAST_LINE_INDEX = -2;
-    private final static int RETURN_LINE_INDEX = -3;
+    private final static int LAST_LINE_INDEX = -1;
+    private final static int RETURN_LINE_INDEX = -2;
     private final static int CONDITION_CAPTURING_GROUP = 2;
     private final static int TYPE_CAPTURING_GROUP = 3;
     protected final static int NAME_CAPTURING_GROUP = 2;
-    protected final static int VALUE_CAPTURING_GROUP = 3;
+    protected final static int VALUE_CAPTURING_GROUP = 4;
     private final static int MINIMUM_METHOD_LINES = 3;
 
 
@@ -62,100 +62,107 @@ public class ScopeChecker {
         }
 
         for (String line : scope.getLines()) {
-            if (bracketBalance == 0) {
-                String firstWord = null;
-                Matcher firstWordMatcher = FIRST_WORD_PATTERN.matcher(line);
-                if(firstWordMatcher.find()) {
-                    firstWord = firstWordMatcher.group();
-                }
-
-                //Variable declaration
-                if (firstWord.matches(VARIABLE_RESERVED_REGEX)) {
-                    Matcher variableBeginningMatcher = VARIABLE_START_PATTERN.matcher(line);
-                    String type = variableBeginningMatcher.group(TYPE_CAPTURING_GROUP);
-                    boolean isFinal = variableBeginningMatcher.group(FINAL_CAPTURING_GROUP).equals(FINAL);
-
-                    Matcher variableNameMatcher = VARIABLE_PATTERN.matcher(line);
-
-                    while(variableNameMatcher.find()){
-                        Matcher variableAssignmentMatcher = VARIABLE_ASSIGNMENT_PATTERN.matcher(variableNameMatcher.group());
-                        String value = variableAssignmentMatcher.group(VALUE_CAPTURING_GROUP);
-                        scope.addVariable(new Variable(type, variableNameMatcher.group(), value, isFinal));
+            Matcher blankLineMatcher = BLANK_LINE_PATTERN.matcher(line);
+            Matcher commentMatcher = COMMENT_PATTERN.matcher(line);
+            if(!(blankLineMatcher.matches() || commentMatcher.matches())) {
+                if (bracketBalance == 0) {
+                    String firstWord = null;
+                    Matcher firstWordMatcher = FIRST_WORD_PATTERN.matcher(line);
+                    if (firstWordMatcher.find()) {
+                        firstWord = firstWordMatcher.group();
                     }
-                }
+
+                    //Variable declaration
+                    if (firstWord.matches(VARIABLE_RESERVED_REGEX)) {
+                        Matcher variableBeginningMatcher = VARIABLE_PATTERN.matcher(line);
+                        String type = null;
+                        boolean isFinal = false;
+                        if (variableBeginningMatcher.matches()) {
+                            type = variableBeginningMatcher.group(TYPE_CAPTURING_GROUP);
+                            isFinal = variableBeginningMatcher.group(FINAL_CAPTURING_GROUP) != null;
+                        }
+
+                        Matcher variableNameMatcher = VARIABLE_PATTERN.matcher(line);
+
+                        while (variableNameMatcher.find()) {
+                            Matcher variableAssignmentMatcher = VARIABLE_ASSIGNMENT_PATTERN.matcher(variableNameMatcher.group());
+                            if (variableAssignmentMatcher.find()) {
+                                String value = variableAssignmentMatcher.group(VALUE_CAPTURING_GROUP);
+                                scope.addVariable(new Variable(type, variableNameMatcher.group(), value, isFinal));
+                            }
+                        }
+                    }
 
 
-                //Nested scope
-                else if (line.matches(OPENING_BRACKET_REGEX)) {
-                    if(isScopeMethod(line))
-                        throw new IllegalCodeException();
+                    //Nested scope
+                    else if (line.matches(OPENING_BRACKET_REGEX)) {
+                        if (isScopeMethod(line)) {
+                            if (scope.getParentScope().getParentScope() != null)
+                                throw new IllegalCodeException();
+                        }
                         // if/while block
-                    else if (firstWord.matches(CONTROL_FLOW_REGEX)){
-                        Matcher controlFlowMatcher = CONTROL_FLOW_PATTERN.matcher(line);
-                        if(controlFlowMatcher.matches()){
-                            conditionChecker(controlFlowMatcher.group(CONDITION_CAPTURING_GROUP), scope);
-                        }
-                        else{
-                            throw new IllegalCodeException();
+                        else if (firstWord.matches(CONTROL_FLOW_REGEX)) {
+                            Matcher controlFlowMatcher = CONTROL_FLOW_PATTERN.matcher(line);
+                            if (controlFlowMatcher.find()) {
+                                conditionChecker(controlFlowMatcher.group(CONDITION_CAPTURING_GROUP), scope);
+                            } else {
+                                throw new IllegalCodeException();
+                            }
+                        } else {
+                            bracketBalance++;
+                            tempSubscope.add(line);
                         }
                     }
-                    else {
-                        bracketBalance++;
-                        tempSubscope.add(line);
-                    }
-                }
 
 //                //Method call
 //                else if (line.matches(METHOD_CALL_REGEX)) {
 //                    Matcher methodCallMatcher = METHOD_CALL_PATTERN.matcher(line);
 //                }
 
-                //Variable reassignment
-                else{
-                    Matcher variableReassignmentMatcher = VARIABLE_ASSIGNMENT_PATTERN.matcher(line);
-                    if(variableReassignmentMatcher.find()){
-                        String varName = variableReassignmentMatcher.group(NAME_CAPTURING_GROUP); //Check
-                        // capturing group numbers!
-                        String varValue = variableReassignmentMatcher.group(VALUE_CAPTURING_GROUP);
-                        if(varValue.matches(VARIABLE_NAME_REGEX)){
-                            Variable assigningVar = scope.isExistingVariable(varValue);
-                            if(assigningVar == null || assigningVar.getValue() == null){
+                    //Variable reassignment
+                    else {
+                        Matcher variableReassignmentMatcher = VARIABLE_ASSIGNMENT_PATTERN.matcher(line);
+                        if (variableReassignmentMatcher.find()) {
+                            String varName = variableReassignmentMatcher.group(NAME_CAPTURING_GROUP); //Check
+                            // capturing group numbers!
+                            String varValue = variableReassignmentMatcher.group(VALUE_CAPTURING_GROUP);
+                            if (varValue.matches(VARIABLE_NAME_REGEX)) {
+                                Variable assigningVar = scope.isExistingVariable(varValue);
+                                if (assigningVar == null || assigningVar.getValue() == null) {
+                                    throw new IllegalCodeException();
+                                } else {
+                                    varValue = assigningVar.getValue();
+                                }
+                            }
+                            Variable oldVar = scope.isExistingVariable(varName);
+                            if (oldVar == null || oldVar.isVariableFinal()) {
                                 throw new IllegalCodeException();
+                            } else {
+                                oldVar.setValue(varValue);
+                                VariableChecker.checkVariable(oldVar);
                             }
-                            else{
-                                varValue = assigningVar.getValue();
-                            }
-                        }
-                        Variable oldVar = scope.isExistingVariable(varName);
-                        if(oldVar == null || oldVar.isVariableFinal()){
+                        } else {
                             throw new IllegalCodeException();
                         }
-                        else{
-                            oldVar.setValue(varValue);
-                            VariableChecker.checkVariable(oldVar);
+                    }
+
+                } else {
+                    tempSubscope.add(line);
+                    if (line.matches(OPENING_BRACKET_REGEX)) {
+                        bracketBalance++;
+                    }
+                    if (line.matches(CLOSING_BRACKET_REGEX)) {
+                        bracketBalance--;
+                        if (bracketBalance == 0) {
+                            scopeStack.push(new Scope(tempSubscope, scope));
+                            tempSubscope.clear();
                         }
                     }
-                    else{
-                        throw new IllegalCodeException();
-                    }
                 }
 
-            } else {
-                tempSubscope.add(line);
-                if (line.matches(OPENING_BRACKET_REGEX)) {
-                    bracketBalance++;
+                while (!scopeStack.empty()) {
+                    checkScope(scopeStack.pop());
                 }
-                if (line.matches(CLOSING_BRACKET_REGEX)) {
-                    bracketBalance--;
-                    if (bracketBalance == 0) {
-                        scopeStack.push(new Scope(tempSubscope, scope));
-                        tempSubscope.clear();
-                    }
-                }
-            }
-
-            while (!scopeStack.empty()) {
-                checkScope(scopeStack.pop());
             }
         }
         if (bracketBalance != STARTING_BRACKET_BALANCE) {
@@ -165,6 +172,8 @@ public class ScopeChecker {
 
     private static void conditionChecker(String condition, Scope currentScope) throws IllegalCodeException{
         Matcher conditionMatcher = CONDITION_PATTERN.matcher(condition);
+        boolean isNumber = true;
+        boolean isExistingVariable = true;
         while(conditionMatcher.find()){
             String currentCondition = conditionMatcher.group();
             if(!currentCondition.matches(BOOLEAN_REGEX)){
@@ -172,14 +181,14 @@ public class ScopeChecker {
                     Double.parseDouble(currentCondition);
                 }
                 catch (NumberFormatException numE){
-                    throw new IllegalCodeException();
+                    isNumber = false;
                 }
                 Variable existingVariable = currentScope.isExistingVariable(currentCondition);
                 if(existingVariable == null || existingVariable.getValue() == null){
-                    throw new IllegalCodeException();
+                    isExistingVariable = false;
                 }
                 else{
-                    if(!existingVariable.getType().matches(BOOLEAN_TYPE_REGEX)){
+                    if(!existingVariable.getType().matches(BOOLEAN_TYPE_REGEX) && !isNumber && !isExistingVariable){
                         throw new IllegalCodeException();
                     }
                 }
