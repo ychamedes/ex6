@@ -15,9 +15,6 @@ public class Scope {
     /** List of the data elements in the scope. */
     private ArrayList<Variable> variables = new ArrayList<>();
 
-    /** List of global variables shared by all scopes*/
-    private static ArrayList<Variable> globals;
-
     /** The parent scope of the scope. */
     private Scope parentScope;
 
