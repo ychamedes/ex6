@@ -80,10 +80,13 @@ public class Sjavac {
      * Value is fourth capturing group. */
     static final Pattern VARIABLE_ASSIGNMENT_PATTERN = Pattern.compile("(?!final)((_\\w+|[a-zA-Z]\\w*)\\s*(=\\s*(true|false|\\\"\\w*\\\"|\\d+(\\.\\d+)?|_\\w+|[a-zA-Z]\\w*))\\s*),?");
 
+    /**Regex for a line with a method call. */
+    static final String METHOD_CALL_REGEX = "\\s*(([a-zA-Z]\\w*)\\s*\\(\\s*((_\\w+|[a-zA-Z]\\w*)\\s*)?(,\\s*(_\\w+|[a-zA-Z]\\w*)\\s*)*\\)\\s*;)\\s*";
+
     /** Pattern for when a method is called.
      * Method name is second capturing group.
      * Each parameter is fourth capturing group. */
-    static final Pattern METHOD_CALL_PATTERN = Pattern.compile("\\s*(([a-zA-Z]\\w*)\\s*\\(\\s*((_\\w+|[a-zA-Z]\\w*)\\s*)?(,\\s*(_\\w+|[a-zA-Z]\\w*)\\s*)*\\)\\s*;)\\s*");
+    static final Pattern METHOD_CALL_PATTERN = Pattern.compile(METHOD_CALL_REGEX);
 
     private String sourceFilePath;
 
