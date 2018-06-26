@@ -58,7 +58,6 @@ public class Scope {
     public Variable isExistingVariable(String name){
         Scope currentScope = this;
         while(currentScope != null) {
-            System.out.println();
             ArrayList<Variable> currentVariables = currentScope.getVariables();
             if (currentVariables != null) {
                 for (Variable existingVar : currentVariables) {
