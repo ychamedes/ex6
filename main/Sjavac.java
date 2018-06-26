@@ -33,7 +33,7 @@ public class Sjavac {
     static final Pattern BLANK_LINE_PATTERN = Pattern.compile("\\s*");
 
     /** Pattern for a comment line in the code. */
-    static final Pattern COMMENT_PATTERN = Pattern.compile("\\/\\/");
+    static final Pattern COMMENT_PATTERN = Pattern.compile("^\\/\\/.*");
 
     /** Pattern for variable(s) declaration, including possible final keyword and initialization.*/
     static final Pattern VARIABLE_PATTERN = Pattern.compile("\\s*((final)\\s+)?(int|double|String|boolean|char)\\s+(?!final)((_\\w+|[a-zA-Z]\\w*)\\s*(=\\s*(true|false|\\\"\\w*\\\"|\\d+(\\.\\d+)?|_\\w+|[a-zA-Z]\\w*))?\\s*)(,\\s*(_\\w+|[a-zA-Z]\\w*)\\s*(=\\s*(true|false|\\\"\\w*\\\"|\\d+(\\.\\d+)?|_\\w+|[a-zA-Z]\\w*))?\\s*)*;\\s*");
@@ -88,6 +88,9 @@ public class Sjavac {
      * Each parameter is fourth capturing group. */
     static final Pattern METHOD_CALL_PATTERN = Pattern.compile(METHOD_CALL_REGEX);
 
+    /** Pattern used to find parameters (variable names) used in a method call. */
+    static final Pattern PARAMETER_PATTERN = Pattern.compile(VARIABLE_NAME_REGEX);
+
     private String sourceFilePath;
 
     /**
@@ -122,13 +125,9 @@ public class Sjavac {
         }
         catch (IOException error){
             printGeneralError(error.getMessage());
-            error.printStackTrace();
-            System.exit(0);
         }
         catch (IllegalCodeException error){
             System.out.println(ILLEGAL_CODE_OUTPUT);
-            error.printStackTrace();
-            System.exit(0);
         }
     }
 
@@ -199,6 +198,5 @@ public class Sjavac {
         }
         System.err.println(GENERAL_ERROR_OUTPUT);
         System.err.println(ERROR + errorMessage);
-        System.exit(0);
     }
 }

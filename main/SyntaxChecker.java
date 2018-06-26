@@ -39,9 +39,9 @@ public class SyntaxChecker {
 
     static void checkSyntax(String[] lines) throws IllegalCodeException{
         for (String line : lines){
-            if (!blankLineCheck(line) && !commentLineCheck(line)){
+            if (!linePatternMatcher(line, BLANK_LINE_PATTERN) && !linePatternMatcher(line, COMMENT_PATTERN)){
                 /* Check every line for a valid end and invalid tokens. */
-                if (!endOfLineCheck(line) || invalidTokenCheck(line)){
+                if (!linePatternFinder(line, END_OF_LINE_PATTERN) || linePatternFinder(line, ILLEGAL_TOKENS_PATTERN)){
                     throw new IllegalCodeException();
                 }
                 Matcher m = FIRST_WORD_PATTERN.matcher(line);
@@ -74,6 +74,26 @@ public class SyntaxChecker {
                 }
             }
         }
+    }
+
+    /**
+     * A generic helper function for seeing if a line matches a pattern.
+     * @param line the line to be checked.
+     * @param pattern the pattern to be compared.
+     * @return true if the line matches.
+     */
+    private static boolean linePatternMatcher(String line, Pattern pattern){
+        return pattern.matcher(line).matches();
+    }
+
+    /**
+     * A generic helper function for seeing if a line contains a match to a pattern.
+     * @param line the line to be checked.
+     * @param pattern the pattern to be compared.
+     * @return true if the line contains the pattern.
+     */
+    private static boolean linePatternFinder(String line, Pattern pattern){
+        return pattern.matcher(line).find();
     }
 
     /**
