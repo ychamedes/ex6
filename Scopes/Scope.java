@@ -21,9 +21,6 @@ public class Scope {
     /** The parent scope of the scope. */
     private Scope parentScope;
 
-    /** The subscopes nested in this scope. */
-    private ArrayList<String>[] subScopes;
-
     public Scope(ArrayList<String> lines){
         scopeLines = lines;
     }
@@ -69,10 +66,6 @@ public class Scope {
             currentScope = currentScope.getParentScope();
         }
         return null;
-    }
-
-    public void addSubscope(ArrayList<String> scopeLines){
-
     }
 
 
