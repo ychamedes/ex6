@@ -42,7 +42,6 @@ public class SyntaxChecker {
             if (!blankLineCheck(line) && !commentLineCheck(line)){
                 /* Check every line for a valid end and invalid tokens. */
                 if (!endOfLineCheck(line) || invalidTokenCheck(line)){
-                    System.out.println("END?INVALID");
                     throw new IllegalCodeException();
                 }
                 Matcher m = FIRST_WORD_PATTERN.matcher(line);
