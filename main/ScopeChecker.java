@@ -17,9 +17,6 @@ import static oop.ex6.main.Sjavac.*;
  */
 public class ScopeChecker {
 
-    protected final static String VOID = "void";
-    protected final static String FINAL = "final";
-
     protected final static String VARIABLE_RESERVED_REGEX = "int|double|String|boolean|char";
     protected final static String OPENING_BRACKET_REGEX = ".*\\{\\s*";
     protected final static String CLOSING_BRACKET_REGEX = "\\s*}\\s*";
@@ -95,7 +92,7 @@ public class ScopeChecker {
                     }
 
 
-                    //Nested scope
+                    //Nested scope (if/while)
                     else if (line.matches(OPENING_BRACKET_REGEX)) {
                         if (isScopeMethod(line)) {
                             if (scope.getParentScope().getParentScope() != null) {
@@ -119,10 +116,16 @@ public class ScopeChecker {
                         }
                     }
 
-//                //Method call
-//                else if (line.matches(METHOD_CALL_REGEX)) {
-//                    Matcher methodCallMatcher = METHOD_CALL_PATTERN.matcher(line);
-//                }
+                //Method call
+                else if (line.matches(METHOD_CALL_REGEX)) {
+                    Matcher methodCallMatcher = METHOD_CALL_PATTERN.matcher(line);
+                    if(methodCallMatcher.find()){
+                        String methodName = methodCallMatcher.group(NAME_CAPTURING_GROUP);
+                        if(!isExistingMethod(methodName)){
+                            throw new IllegalCodeException();
+                        }
+                    }
+                }
 
                     //Variable reassignment
                     else {
@@ -146,7 +149,7 @@ public class ScopeChecker {
                                 VariableChecker.checkVariable(oldVar);
                             }
                         } else {
-                            if(!line.matches(RETURN_REGEX)) {
+                            if(!(line.matches(RETURN_REGEX) || line.matches(CLOSING_BRACKET_REGEX))) {
                                 throw new IllegalCodeException();
                             }
                         }
