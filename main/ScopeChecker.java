@@ -52,16 +52,17 @@ public class ScopeChecker {
         ArrayList<String> tempSubscope = new ArrayList<>();
         ArrayList<String> lines = scope.getLines();
 
-        if(isScopeMethod(scope.getLines().get(FIRST_LINE_INDEX))){
-            if(lines.size() <= MINIMUM_METHOD_LINES){
-                throw new IllegalCodeException();
-            }
-            else {
-                methodEndingChecker(lines.get(lines.size() + RETURN_LINE_INDEX), lines.get(lines.size() + LAST_LINE_INDEX));
+        if(lines.size() > 0) {
+            if (isScopeMethod(lines.get(FIRST_LINE_INDEX))) {
+                if (lines.size() <= MINIMUM_METHOD_LINES) {
+                    throw new IllegalCodeException();
+                } else {
+                    methodEndingChecker(lines.get(lines.size() + RETURN_LINE_INDEX), lines.get(lines.size() + LAST_LINE_INDEX));
+                }
             }
         }
 
-        for (String line : scope.getLines()) {
+        for (String line : lines) {
             Matcher blankLineMatcher = BLANK_LINE_PATTERN.matcher(line);
             Matcher commentMatcher = COMMENT_PATTERN.matcher(line);
             if(!(blankLineMatcher.matches() || commentMatcher.matches())) {
@@ -97,8 +98,9 @@ public class ScopeChecker {
                     //Nested scope
                     else if (line.matches(OPENING_BRACKET_REGEX)) {
                         if (isScopeMethod(line)) {
-                            if (scope.getParentScope().getParentScope() != null)
+                            if (scope.getParentScope().getParentScope() != null) {
                                 throw new IllegalCodeException();
+                            }
                         }
                         // if/while block
                         else if (firstWord.matches(CONTROL_FLOW_REGEX)) {
@@ -109,7 +111,10 @@ public class ScopeChecker {
                                 throw new IllegalCodeException();
                             }
                         } else {
-                            bracketBalance++;
+                            throw new IllegalCodeException();
+                        }
+                        bracketBalance++;
+                        if(line != lines.get(0)) {
                             tempSubscope.add(line);
                         }
                     }
@@ -123,8 +128,7 @@ public class ScopeChecker {
                     else {
                         Matcher variableReassignmentMatcher = VARIABLE_ASSIGNMENT_PATTERN.matcher(line);
                         if (variableReassignmentMatcher.find()) {
-                            String varName = variableReassignmentMatcher.group(NAME_CAPTURING_GROUP); //Check
-                            // capturing group numbers!
+                            String varName = variableReassignmentMatcher.group(NAME_CAPTURING_GROUP);
                             String varValue = variableReassignmentMatcher.group(VALUE_CAPTURING_GROUP);
                             if (varValue.matches(VARIABLE_NAME_REGEX)) {
                                 Variable assigningVar = scope.isExistingVariable(varValue);
@@ -142,19 +146,24 @@ public class ScopeChecker {
                                 VariableChecker.checkVariable(oldVar);
                             }
                         } else {
-                            throw new IllegalCodeException();
+                            if(!line.matches(RETURN_REGEX)) {
+                                throw new IllegalCodeException();
+                            }
                         }
                     }
 
                 } else {
-                    tempSubscope.add(line);
+                    if(line != lines.get(lines.size() - 1)) {
+                        tempSubscope.add(line);
+                    }
                     if (line.matches(OPENING_BRACKET_REGEX)) {
                         bracketBalance++;
                     }
                     if (line.matches(CLOSING_BRACKET_REGEX)) {
                         bracketBalance--;
                         if (bracketBalance == 0) {
-                            scopeStack.push(new Scope(tempSubscope, scope));
+                            ArrayList<String> childScopeLines = new ArrayList<>(tempSubscope);
+                            scopeStack.push(new Scope(childScopeLines, scope));
                             tempSubscope.clear();
                         }
                     }
