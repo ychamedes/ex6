@@ -48,27 +48,27 @@ public class SyntaxChecker {
                 if(m.find()) {
                     String firstWord = m.group();
 
-                    if (reservedWordAtStart(line)) {
+                    if (linePatternFinder(line, RESERVED_WORD_PATTERN)) {
                         /* Check every line according to a specific format, that it follows that format. */
                         // Variable declaration
-                        if (firstWord.matches(VARIABLE_DECLARATION_WORDS_REGEX) && !variableSyntaxCheck(line)) {
+                        if (firstWord.matches(VARIABLE_DECLARATION_WORDS_REGEX) && !linePatternMatcher(line, VARIABLE_PATTERN)) {
                             throw new IllegalCodeException();
                         }
                         // Control Flow block
-                        if (firstWord.matches(CONTROL_FLOW_REGEX) && !controlFlowSyntaxCheck(line)) {
+                        if (firstWord.matches(CONTROL_FLOW_REGEX) && !linePatternMatcher(line, CONTROL_FLOW_PATTERN)) {
                             throw new IllegalCodeException();
                         }
                         // Method declaration
-                        if (firstWord.matches(METHOD_DECLARATION_REGEX) && !methodSyntaxCheck(line)) {
+                        if (firstWord.matches(METHOD_DECLARATION_REGEX) && !linePatternMatcher(line, METHOD_PATTERN)) {
                             throw new IllegalCodeException();
                         }
                         // Return case
-                        if (firstWord.matches(METHOD_RETURN_KEYWORD) && !returnLineCheck(line)) {
+                        if (firstWord.matches(METHOD_RETURN_KEYWORD) && !linePatternMatcher(line, RETURN_PATTERN)) {
                             throw new IllegalCodeException();
                         }
                     }
                     // Check syntax of cases without reserved words
-                    else if (!nonReservedWordCheck(line)) {
+                    else if (!linePatternMatcher(line, NON_RESERVED_PATTERN)) {
                         throw new IllegalCodeException();
                     }
                 }
@@ -96,104 +96,4 @@ public class SyntaxChecker {
         return pattern.matcher(line).find();
     }
 
-    /**
-     * Checks if a line is empty (containing only white space)
-     * @param line the line to be checked
-     * @return true if the line is empty
-     */
-    private static boolean blankLineCheck(String line){
-        Matcher m = BLANK_LINE_PATTERN.matcher(line);
-        return m.matches();
-    }
-
-    /**
-     * Checks if the line is a valid comment (Beginning with //)
-     * @param line the line to be checked
-     * @return true if the line is a comment
-     */
-    private static boolean commentLineCheck(String line){
-        Matcher m = COMMENT_PATTERN.matcher(line);
-        return m.lookingAt();
-    }
-
-    /**
-     * Checks if line begins with a reserved word.
-     * @param line the line to be checked
-     * @return true if the line begins with a reserved word
-     */
-    private static boolean reservedWordAtStart(String line){
-        Matcher m = RESERVED_WORD_PATTERN.matcher(line);
-        return m.find();
-    }
-
-    /**
-     * Checks if line is a valid "non-reserved word" line, i.e. uses a method, initializes a variable,
-     * or is a closing curly brace.
-     * @param line the line to be checked.
-     * @return true if the line is valid.
-     */
-    private static boolean nonReservedWordCheck(String line){
-        Matcher m = NON_RESERVED_PATTERN.matcher(line);
-        return m.matches();
-    }
-
-    /**
-     * Checks if line follows the correct format of variable declaration.
-     * @param line the line to be checked.
-     * @return true if the line follows the format.
-     */
-    private static boolean variableSyntaxCheck(String line){
-        Matcher m = VARIABLE_PATTERN.matcher(line);
-        return m.matches();
-    }
-
-    /**
-     * Checks if line follows the correct format of an if/while statement.
-     * @param line the line to be checked.
-     * @return true if the line follows the format.
-     */
-    private static boolean controlFlowSyntaxCheck(String line){
-        Matcher m = CONTROL_FLOW_PATTERN.matcher(line);
-        return m.matches();
-    }
-
-    /**
-     * Checks if line follows the correct format of method declaration.
-     * @param line the line to be checked.
-     * @return true if the line follows the format.
-     */
-    private static boolean methodSyntaxCheck(String line){
-        Matcher m = METHOD_PATTERN.matcher(line);
-        return m.matches();
-    }
-
-    /**
-     * Checks if a line has the correct format for a line of code (ends in ;, {, or } )
-     * @param line the line to be checked
-     * @return true if line ends correctly
-     */
-    private static boolean endOfLineCheck(String line){
-        Matcher m = END_OF_LINE_PATTERN.matcher(line);
-        return m.find();
-    }
-
-    /**
-     * Checks that the line has no invalid tokens, such as operators or alternate comment structures.
-     * @param line the line to be checked.
-     * @return true if the line has invalid tokens
-     */
-    private static boolean invalidTokenCheck(String line){
-        Matcher m = ILLEGAL_TOKENS_PATTERN.matcher(line);
-        return m.find();
-    }
-
-    /**
-     * Checks that line is a valid return line, meaning there are no other words on the line.
-     * @param line the line to be checked.
-     * @return true if the line is a valid return line.
-     */
-    private static boolean returnLineCheck(String line){
-        Matcher m = RETURN_PATTERN.matcher(line);
-        return m.matches();
-    }
 }

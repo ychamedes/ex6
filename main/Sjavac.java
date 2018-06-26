@@ -22,7 +22,7 @@ public class Sjavac {
 
     private static final int INITIAL_LINE_COUNT = 0;
 
-    private static final String ERROR = " Error: ";
+    private static final String ERROR = "Error: ";
     private static final String INVALID_NUMBER_OF_ARGUMENTS = "Invalid number of arguments";
     private static final String UNKNOWN_ERROR = "Unknown Error";
 
