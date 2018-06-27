@@ -16,36 +16,35 @@ import static oop.ex6.main.Sjavac.*;
  * Verifies that variables and methods are not used outside of their scope or declared in the wrong place,
  * and that no scope-related issues exist in a given scope.
  */
-public class ScopeChecker {
+class ScopeChecker {
 
 
-    protected final static String OPENING_BRACKET_REGEX = ".*\\{\\s*";
-    protected final static String CLOSING_BRACKET_REGEX = "\\s*}\\s*";
+    final static String OPENING_BRACKET_REGEX = ".*\\{\\s*";
+    final static String CLOSING_BRACKET_REGEX = "\\s*}\\s*";
 
 
-    protected final static int STARTING_BRACKET_BALANCE = 0;
-    protected final static int FINAL_CAPTURING_GROUP = 2;
+    final static int STARTING_BRACKET_BALANCE = 0;
+    private final static int FINAL_CAPTURING_GROUP = 2;
     private final static int FIRST_LINE_INDEX = 0;
     private final static int LAST_LINE_INDEX = -1;
     private final static int RETURN_LINE_INDEX = -2;
     private final static int CONDITION_CAPTURING_GROUP = 2;
     private final static int TYPE_CAPTURING_GROUP = 3;
-    protected final static int PARAMETERS_CAPTURING_GROUP = 3;
-    protected final static int NAME_CAPTURING_GROUP = 2;
-    protected final static int VALUE_CAPTURING_GROUP = 4;
+    final static int NAME_CAPTURING_GROUP = 2;
+    private final static int VALUE_CAPTURING_GROUP = 4;
     private final static int MINIMUM_METHOD_LINES = 3;
 
 
     /**
      * A Stack object that stores Scopes that are yet to be checked
      */
-    protected static Stack<Scope> scopeStack = new Stack<>();
+    static Stack<Scope> scopeStack = new Stack<>();
 
     /**
      * An ArrayList of the methods declared in the main scope
      */
     //protected static ArrayList<Method> methods = new ArrayList<>();
-    protected static ArrayList<String> methods = new ArrayList<>();
+    static ArrayList<String> methods = new ArrayList<>();
 
 
     /**
@@ -128,24 +127,8 @@ public class ScopeChecker {
                             if (!isExistingMethod(methodName)) {
                                 throw new IllegalCodeException();
                             }
-//                            Matcher parametersMatcher = PARAMETER_PATTERN.matcher(methodCallMatcher.group(VALUE_CAPTURING_GROUP));
-//
-//                            ArrayList<Variable> requiredParams = existingMethod.getParameters();
-//                            if (existingMethod.getParameters().size() != parameters.length()) {
-//                                throw new IllegalCodeException();
-//                            } else {
-//                                for (int i = 0; i < e)
-//                            }
                         }
-//                    //Make new method class, that stores a list of Variables and a method name
-//                        //Change "methods" to be a list of Methods
-//                        //When a method is called, create a list of parameters it is called with, find the
-//                        // method in "methods" and compare them one by one to the required parameters
-//                        //When a method is declared, capture the parameters and pass them to the new scope
-//                        // as variables using addVariable, before the scope is put in the stack
-//                        //Make isexistingmethod return the method
-//                }
-
+                    }
                         //Variable reassignment
                         else {
                             checkVariableAssignment(line, scope);
@@ -177,7 +160,6 @@ public class ScopeChecker {
                 throw new IllegalCodeException();
             }
         }
-    }
 
         /**
          * Checks if a condition following an if/while statement is legal
@@ -186,8 +168,7 @@ public class ScopeChecker {
          * @param currentScope the if/while scope containing the condition
          * @throws IllegalCodeException if the condition is illegal
          */
-        private static void conditionChecker (String condition, Scope currentScope) throws
-        IllegalCodeException {
+        private static void conditionChecker (String condition, Scope currentScope) throws IllegalCodeException {
             Matcher conditionMatcher = CONDITION_PATTERN.matcher(condition);
 
             boolean isNumber = true;
@@ -313,13 +294,5 @@ public class ScopeChecker {
             }
         }
 
-
-//    protected static Method isExistingMethod(String methodName){
-//        for(Method method : methods){
-//            if (method.getMethodName().equals(methodName)){
-//                return method;
-//            }
-//        }
-//        return null;
-//    }
 }
+
