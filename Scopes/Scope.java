@@ -18,35 +18,54 @@ public class Scope {
     /** The parent scope of the scope. */
     private Scope parentScope;
 
+    /**
+     * A constructor for the Scope class
+     * @param lines the lines in the scope
+     */
     public Scope(ArrayList<String> lines){
         scopeLines = lines;
     }
 
+    /**
+     * A constructor for the Scope class
+     * @param lines the lines in the scope
+     * @param parent the parent scope
+     */
     public Scope(ArrayList<String> lines, Scope parent){
         scopeLines = lines;
         parentScope = parent;
     }
 
-    public Scope(ArrayList<String> lines, Scope parent, ArrayList<Variable> parameters) throws IllegalCodeException{
-        scopeLines = lines;
-        parentScope = parent;
-        for(Variable parameter : parameters){
-            addVariable(parameter);
-        }
-    }
 
+    /**
+     *
+     * @return the lines in the scope
+     */
     public ArrayList<String> getLines(){
         return scopeLines;
     }
 
+    /**
+     *
+     * @return the parent of this scope
+     */
     public Scope getParentScope(){
         return parentScope;
     }
 
+    /**
+     *
+     * @return the variables in the scope
+     */
     public ArrayList<Variable> getVariables(){
         return variables;
     }
 
+    /**
+     * Checks if a variable is legal, and if so adds it to the scope's variables
+     * @param variable the Variable to be added
+     * @throws IllegalCodeException if the variable is illegal
+     */
     public void addVariable(Variable variable) throws IllegalCodeException {
         if(isExistingVariable(variable.getName()) != null){
             throw new IllegalCodeException();
@@ -57,6 +76,11 @@ public class Scope {
         }
     }
 
+    /**
+     * Checks if a Variable exists in the scope, and returns the existing Variable
+     * @param name the name of the variable to check
+     * @return a Variable object if one of the same name exists, and false otherwise
+     */
     public Variable isExistingVariable(String name){
         Scope currentScope = this;
         while(currentScope != null) {
