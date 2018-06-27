@@ -27,6 +27,14 @@ public class Scope {
         parentScope = parent;
     }
 
+    public Scope(ArrayList<String> lines, Scope parent, ArrayList<Variable> parameters) throws IllegalCodeException{
+        scopeLines = lines;
+        parentScope = parent;
+        for(Variable parameter : parameters){
+            addVariable(parameter);
+        }
+    }
+
     public ArrayList<String> getLines(){
         return scopeLines;
     }
@@ -64,6 +72,5 @@ public class Scope {
         }
         return null;
     }
-
 
 }
