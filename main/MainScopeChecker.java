@@ -1,9 +1,7 @@
 package oop.ex6.main;
 
 import oop.ex6.Exceptions.IllegalCodeException;
-import oop.ex6.Scopes.Method;
 import oop.ex6.Scopes.Scope;
-import oop.ex6.Scopes.Variable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,9 +12,6 @@ import static oop.ex6.main.Sjavac.*;
 /**Checks that there are no scope-related issues in a given scope. Also checks validity of variables and
  * methods in a scope*/
 public class MainScopeChecker extends ScopeChecker {
-
-    private final static int TYPE_CAPTURING_GROUP = 3;
-    private final static int PARAMETER_NAME_CAPTURING_GROUP = 5;
 
 
     /**
@@ -38,7 +33,6 @@ public class MainScopeChecker extends ScopeChecker {
         int bracketBalance = STARTING_BRACKET_BALANCE;
         ArrayList<String> lines = scope.getLines();
         ArrayList<String> tempSubscope = new ArrayList<>();
-        ArrayList<Variable> tempParameters = new ArrayList<>();
 
         for(String line : lines){
             Matcher blankLineMatcher = BLANK_LINE_PATTERN.matcher(line);
@@ -66,32 +60,15 @@ public class MainScopeChecker extends ScopeChecker {
                             tempSubscope.add(line);
                             String methodName = null;
                             Matcher methodDeclarationMatcher = METHOD_PATTERN.matcher(line);
-                            String name = null;
-                            String type = null;
-                            boolean isFinal = false;
                             if (methodDeclarationMatcher.find()) {
                                 methodName = methodDeclarationMatcher.group(NAME_CAPTURING_GROUP);
 
-//                                Matcher parameterMatcher = VARIABLE_PATTERN.matcher
-//                                        (methodDeclarationMatcher.group(PARAMETERS_CAPTURING_GROUP));
-//                                while (parameterMatcher.find()) {
-//                                    String parameter = parameterMatcher.group();
-//                                    Matcher parameterPartMatcher = PARAMETER_PATTERN.matcher(parameter);
-//                                    if (parameterPartMatcher.find()) {
-//                                        name = parameterMatcher.group(PARAMETER_NAME_CAPTURING_GROUP);
-//                                        type = parameterPartMatcher.group(TYPE_CAPTURING_GROUP);
-//                                        isFinal = parameterMatcher.group(FINAL_CAPTURING_GROUP) != null;
-//                                    }
-//                                    tempParameters.add(new Variable(type, name, null, isFinal));
-//                                }
-
                             }
 
-                            if (isExistingMethod(methodName)) {// if (isExistingMethod(methodName) != null) {
+                            if (isExistingMethod(methodName)) {
                                 throw new IllegalCodeException();
                             } else {
                                 methods.add(methodName);
-                                //methods.add(new Method(methodName, tempParameters)); }
                             }
                         }
                     }
@@ -110,10 +87,8 @@ public class MainScopeChecker extends ScopeChecker {
                         bracketBalance--;
                         if (bracketBalance == 0) {
                             ArrayList<String> childScopeLines = new ArrayList<>(tempSubscope);
-                            ArrayList<Variable> childMethodParameters = new ArrayList<>(tempParameters);
-                            scopeStack.push(new Scope(childScopeLines, scope, childMethodParameters));
+                            scopeStack.push(new Scope(childScopeLines, scope));
                             tempSubscope.clear();
-                            tempParameters.clear();
                         }
                     }
                 }
