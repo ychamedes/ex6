@@ -1,7 +1,7 @@
 package oop.ex6.Scopes;
 
 /**
- * Variable class represents a variable.
+ * Variable class represents a variable
  */
 public class Variable{
 
@@ -18,6 +18,13 @@ public class Variable{
     private boolean isFinal;
 
 
+    /**
+     * A constructor for the Variable class
+     * @param type the variable type
+     * @param name the name of the variable
+     * @param value the value assigned to the variable
+     * @param isFinal true if the boolean is declared final
+     */
     public Variable(String type, String name, String value, boolean isFinal){
         this.type = type;
         this.name = name;
@@ -25,22 +32,42 @@ public class Variable{
         this.isFinal = isFinal;
     }
 
+    /**
+     *
+     * @return the variable's type
+     */
     public String getType(){
         return type;
     }
 
+    /**
+     *
+     * @return the variable's name
+     */
     String getName(){
         return name;
     }
 
+    /**
+     *
+     * @return the variable's value
+     */
     public String getValue(){
         return value;
     }
 
+    /**
+     * Change the value assigned to the variable
+     * @param newValue the new value
+     */
     public void setValue(String newValue){
         value = newValue;
     }
 
+    /**
+     *
+     * @return true if the variable is final, false otherwise
+     */
     public boolean isVariableFinal(){
         return isFinal;
     }
