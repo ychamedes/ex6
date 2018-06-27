@@ -3,9 +3,9 @@ package oop.ex6.main;
 import oop.ex6.Exceptions.IllegalCodeException;
 import oop.ex6.Scopes.Variable;
 
-import oop.ex6.Exceptions.IllegalCodeException;
-import oop.ex6.Scopes.Variable;
-
+/**
+ * VariableChecker checks that all variables follow their declared types.
+ */
 public class VariableChecker {
 
     private static final String BOOLEAN = "boolean";

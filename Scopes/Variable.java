@@ -1,7 +1,7 @@
 package oop.ex6.Scopes;
 
 /**
- * Variable class represents a variable
+ * Variable class represents a variable.
  */
 public class Variable{
 

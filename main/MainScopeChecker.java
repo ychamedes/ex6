@@ -10,6 +10,11 @@ import java.util.regex.Matcher;
 
 import static oop.ex6.main.Sjavac.*;
 
+/**
+ * MainScopeChecker checks that there are no violations of scope in the main scope of the code.
+ * Keeps track of global variables, and ensures that there no method calls or "stray" if/while statements.
+ */
+
 public class MainScopeChecker extends ScopeChecker {
 
     private final static int TYPE_CAPTURING_GROUP = 3;
