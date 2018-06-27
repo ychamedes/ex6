@@ -13,30 +13,6 @@ import static oop.ex6.main.Sjavac.*;
  */
 public class SyntaxChecker {
 
-    /** Regex options of reserved words that can begin variable declaration. */
-    static final String VARIABLE_DECLARATION_WORDS_REGEX = "int|double|String|boolean|char|final";
-
-    /** Regex options of reserved words the can begin method declaration. */
-    static final String METHOD_DECLARATION_REGEX = "void";
-
-    /** Reserved word for return statement in method. */
-    static final String METHOD_RETURN_KEYWORD = "return";
-
-    /** Pattern for a reserved word. */
-    static final Pattern RESERVED_WORD_PATTERN = Pattern.compile("^\\s*(int|double|String|boolean|char|final|void|if|while|true|false|return)");
-
-    /** Pattern for valid non-reserved word sequences: closing curly brace, variable initialization, and method calling. */
-    static final Pattern NON_RESERVED_PATTERN = Pattern.compile("\\s*(}|(_\\w+|[a-zA-Z]\\w*)\\s*=\\s*(true|false|\\\"\\w*\\\"|\\d+(\\.\\d+)?|_\\w+|[a-zA-Z]\\w*)\\s*;|([a-zA-Z]\\w*)\\s*\\(\\s*((_\\w+|[a-zA-Z]\\w*)\\s*)?(,\\s*(_\\w+|[a-zA-Z]\\w*)\\s*)*\\)\\s*;)\\s*");
-
-    /** Pattern for the end of each line, which either be a semicolon, or open or closed curly brace. */
-    static final Pattern END_OF_LINE_PATTERN = Pattern.compile("[;\\{\\}]\\s*$");
-
-    /** Pattern for a return line, which should be by itself. */
-    static final Pattern RETURN_PATTERN = Pattern.compile("\\s*return;\\s*");
-
-    /** Pattern for illegal tokens or sequence in the code: operators and alternate comment patterns. */
-    static final Pattern ILLEGAL_TOKENS_PATTERN = Pattern.compile("\\/\\*{1,2}.*\\*\\/|[-\\+\\*]");
-
     static void checkSyntax(String[] lines) throws IllegalCodeException{
         for (String line : lines){
             if (!linePatternMatcher(line, BLANK_LINE_PATTERN) && !linePatternMatcher(line, COMMENT_PATTERN)){

@@ -26,13 +26,13 @@ public class Sjavac {
     private static final String INVALID_NUMBER_OF_ARGUMENTS = "Invalid number of arguments";
     private static final String UNKNOWN_ERROR = "Unknown Error";
 
-    /** Pattern for the first non-whitespace sequence. */
+    /** Pattern for the first non-whitespace sequence. Used with find. */
     static final Pattern FIRST_WORD_PATTERN = Pattern.compile("\\S+");
 
-    /** Pattern for a blank line in the code. */
+    /** Pattern for a blank line in the code. Used with match. */
     static final Pattern BLANK_LINE_PATTERN = Pattern.compile("\\s*");
 
-    /** Pattern for a comment line in the code. */
+    /** Pattern for a comment line in the code. Used with match. */
     static final Pattern COMMENT_PATTERN = Pattern.compile("^\\/\\/.*");
 
     /** Pattern for variable(s) declaration, including possible final keyword and initialization.*/
@@ -42,7 +42,7 @@ public class Sjavac {
     static final Pattern METHOD_PATTERN = Pattern.compile("\\s*void\\s+([a-zA-Z]\\w*)\\s*\\((\\s*(final\\s+)?(int|double|String|boolean|char)\\s+(_\\w+|[a-zA-Z]\\w*)\\s*)?(,\\s*(final\\s+)?(int|double|String|boolean|char)\\s+(_\\w+|[a-zA-Z]\\w*)\\s*)*\\)\\s*\\{\\s*");
 
     /** Regex options of reserved words for command flow statements. */
-    static final String CONTROL_FLOW_REGEX = "if|while";
+    static final String CONTROL_FLOW_REGEX = "(if|while)\\s*.*";
 
     /** Pattern for control flow (if/while) statement with valid condition type.
      * Condition is second capturing group. */
@@ -61,7 +61,7 @@ public class Sjavac {
     /** Regex options of reserved boolean words for command flow conditions. */
     static final String BOOLEAN_REGEX = "true|false";
 
-    /** Regex options of reserved boolean words for command flow conditions. */
+    /** Regex options of reserved words for command flow conditions. */
     static final String BOOLEAN_TYPE_REGEX = "boolean|double|int";
 
     /** Pattern for a closing bracket line, which should be by itself. */
@@ -77,11 +77,13 @@ public class Sjavac {
 
     /** Pattern for if a variable is being assigned.
      * Name is second capturing group.
-     * Value is fourth capturing group. */
-    static final Pattern VARIABLE_ASSIGNMENT_PATTERN = Pattern.compile("(?!final)((_\\w+|[a-zA-Z]\\w*)\\s*(=\\s*(true|false|\\\"\\w*\\\"|\\d+(\\.\\d+)?|_\\w+|[a-zA-Z]\\w*))\\s*),?");
+     * Value is third capturing group. */
+    static final Pattern VARIABLE_ASSIGNMENT_PATTERN = Pattern.compile("^(?!final)((\\w+)\\s*=\\s*([\\w\\.\"]+)\\s*)(,\\s*(\\w+)\\s*=\\s*([\\w\\.\"])\\s*)*;");
 
-    /**Regex for a line with a method call. */
-    static final String METHOD_CALL_REGEX = "\\s*(([a-zA-Z]\\w*)\\s*\\(\\s*((_\\w+|[a-zA-Z]\\w*)\\s*)?(,\\s*(_\\w+|[a-zA-Z]\\w*)\\s*)*\\)\\s*;)\\s*";
+    /**Regex for a line with a method call.
+     * Method name is first capturing group.
+     * Parameters are second capturing group. */
+    static final String METHOD_CALL_REGEX = "\\s*(\\w+)\\s*\\((\\s*(([\\w\\.\"]+)\\s*)?(,\\s*([\\w\\.\"]+)\\s*)*)\\)\\s*;\\s*";
 
     /** Pattern for when a method is called.
      * Method name is second capturing group.
@@ -91,6 +93,28 @@ public class Sjavac {
     /** Pattern used to find parameters (variable names) used in a method call. */
     static final Pattern PARAMETER_PATTERN = Pattern.compile(VARIABLE_NAME_REGEX);
 
+    /** Regex options of reserved words that can begin variable declaration. */
+    static final String VARIABLE_DECLARATION_WORDS_REGEX = "int|double|String|boolean|char|final";
+
+    /** Regex options of reserved words the can begin method declaration. */
+    static final String METHOD_DECLARATION_REGEX = "void";
+
+    /** Reserved word for return statement in method. */
+    static final String METHOD_RETURN_KEYWORD = "return";
+
+    /** Pattern for a reserved word. */
+    static final Pattern RESERVED_WORD_PATTERN = Pattern.compile("^\\s*(int|double|String|boolean|char|final|void|if|while|true|false|return)");
+
+    /** Pattern for valid non-reserved word sequences: closing curly brace, variable initialization, and method calling. */
+    static final Pattern NON_RESERVED_PATTERN = Pattern.compile("^\\s*(}|\\w+\\s*=\\s*[\\w\\.\"]+\\s*;|\\w+\\s*\\(\\s*([\\w\\.\"]+)?(,\\s*[\\w\\.\"]+\\s*)*\\)\\s*;)\\s*");
+
+    /** Pattern for the end of each line, which either be a semicolon, or open or closed curly brace. Used with find. */
+    static final Pattern END_OF_LINE_PATTERN = Pattern.compile("[;\\{\\}]\\s*$");
+
+    /** Pattern for illegal tokens or sequence in the code: operators and alternate comment patterns. */
+    static final Pattern ILLEGAL_TOKENS_PATTERN = Pattern.compile("\\/\\*{1,2}.*\\*\\/|[-\\+\\*]");
+
+    /** The path of the code source file. */
     private String sourceFilePath;
 
     /**
@@ -127,6 +151,7 @@ public class Sjavac {
             printGeneralError(error.getMessage());
         }
         catch (IllegalCodeException error){
+            error.printStackTrace();
             System.out.println(ILLEGAL_CODE_OUTPUT);
         }
     }
