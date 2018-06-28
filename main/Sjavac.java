@@ -19,7 +19,6 @@ public class Sjavac {
     private static final int LEGAL_CODE_OUTPUT = 0;
     private static final int ILLEGAL_CODE_OUTPUT = 1;
     private static final int GENERAL_ERROR_OUTPUT = 2;
-
     private static final int INITIAL_LINE_COUNT = 0;
 
     private static final String ERROR = "Error: ";
@@ -36,17 +35,24 @@ public class Sjavac {
     static final Pattern COMMENT_PATTERN = Pattern.compile("^\\/\\/.*");
 
     /** Pattern for variable(s) declaration, including possible final keyword and initialization.*/
-    static final Pattern VARIABLE_PATTERN = Pattern.compile("\\s*((final)\\s+)?(int|double|String|boolean|char)\\s+(?!final)((_\\w+|[a-zA-Z]\\w*)\\s*(=\\s*(true|false|\\\"\\w*\\\"|\\d+(\\.\\d+)?|_\\w+|[a-zA-Z]\\w*))?\\s*)(,\\s*(_\\w+|[a-zA-Z]\\w*)\\s*(=\\s*(true|false|\\\"\\w*\\\"|\\d+(\\.\\d+)?|_\\w+|[a-zA-Z]\\w*))?\\s*)*;\\s*");
+    static final Pattern VARIABLE_PATTERN = Pattern.compile("\\s*((final)\\s+)?(int|double|String|boolean|char)\\s+" +
+            "(?!final)((_\\w+|[a-zA-Z]\\w*)\\s*(=\\s*(true|false|\\\"\\w*\\\"|\\d+(\\.\\d+)?|_\\w+|[a-zA-Z]\\w*))?" +
+            "\\s*)(,\\s*(_\\w+|[a-zA-Z]\\w*)\\s*(=\\s*(true|false|\\\"\\w*\\\"|\\d+(\\.\\d+)?|_\\w+|[a-zA-Z]\\w*))?" +
+            "\\s*)*;\\s*");
 
-    /** Pattern for method declaration, including the void keyword and valid parameter conditions. */
-    static final Pattern METHOD_PATTERN = Pattern.compile("\\s*void\\s+([a-zA-Z]\\w*)\\s*\\((\\s*(final\\s+)?(int|double|String|boolean|char)\\s+(_\\w+|[a-zA-Z]\\w*)\\s*)?(,\\s*(final\\s+)?(int|double|String|boolean|char)\\s+(_\\w+|[a-zA-Z]\\w*)\\s*)*\\)\\s*\\{\\s*");
+    /** Pattern for method declaration, including the void keyword and valid parameter conditions.
+     * Method name is first capturing group.
+     * Parameters are second capturing group. */
+    static final Pattern METHOD_PATTERN = Pattern.compile("\\s*void\\s+([a-zA-Z]\\w*)\\s*\\(((\\s*(final\\s+)?(int|" +
+            "double|String|boolean|char)\\s+(_\\w+|[a-zA-Z]\\w*)\\s*)?(,\\s*(final\\s+)?(int|double|String|boolean|char)\\s+(_\\w+|[a-zA-Z]\\w*)\\s*)*)\\)\\s*\\{\\s*");
 
     /** Regex options of reserved words for command flow statements. */
-    static final String CONTROL_FLOW_REGEX = "(if|while)\\s*.*";
+    static final String CONTROL_FLOW_REGEX = "(if|while)\\S*";
 
     /** Pattern for control flow (if/while) statement with valid condition type.
      * Condition is second capturing group. */
-    static final Pattern CONTROL_FLOW_PATTERN = Pattern.compile("\\s*(if|while)\\s*\\((\\s*(\\w+\\s*(\\|\\||&&))*\\s*\\w+\\s*)\\)\\s*\\{\\s*");
+    static final Pattern CONTROL_FLOW_PATTERN = Pattern.compile("\\s*(if|while)\\s*\\((\\s*([\\w\\.]+\\s*(\\|\\||&&))" +
+            "*\\s*[\\w\\.]+\\s*)\\)\\s*\\{\\s*");
 
     /** Pattern for the boolean value of a if/while statement.
      * Each Condition is first capturing group. */
@@ -56,7 +62,7 @@ public class Sjavac {
     static final String RETURN_REGEX = "\\s*return;\\s*";
     
     /** Pattern for a return line, which should be by itself. */
-    static final Pattern RETURN_PATTERN = Pattern.compile("\\s*return;\\s*");
+    static final Pattern RETURN_PATTERN = Pattern.compile(RETURN_REGEX);
 
     /** Regex options of reserved boolean words for command flow conditions. */
     static final String BOOLEAN_REGEX = "true|false";
@@ -67,31 +73,23 @@ public class Sjavac {
     /** Pattern for a closing bracket line, which should be by itself. */
     static final Pattern CLOSING_BRACKET_PATTERN = Pattern.compile("\\s*}\\s*");
 
-    /** Pattern for the start of a variable.
-     * Final keyword is second capturing group.
-     * Variable type is third capturing group. */
-    static final Pattern VARIABLE_START_PATTERN = Pattern.compile("((final)\\s+)?(int|double|String|boolean|char)");
-
     /** Pattern for variable(s) name. Variable name is second capturing group.*/
     static final String VARIABLE_NAME_REGEX = "_\\w+|[a-zA-Z]\\w*";
 
     /** Pattern for if a variable is being assigned.
      * Name is second capturing group.
      * Value is third capturing group. */
-    static final Pattern VARIABLE_ASSIGNMENT_PATTERN = Pattern.compile("^(?!final)((\\w+)\\s*=\\s*([\\w\\.\"]+)\\s*)(,\\s*(\\w+)\\s*=\\s*([\\w\\.\"])\\s*)*;");
+    static final Pattern VARIABLE_ASSIGNMENT_PATTERN = Pattern.compile("^(?!final)((\\w+)\\s*=\\s*([\\w\\.\"]+)\\s*)" +
+            "(,\\s*(\\w+)\\s*=\\s*([\\w\\.\"])\\s*)*;");
 
     /**Regex for a line with a method call.
      * Method name is first capturing group.
      * Parameters are second capturing group. */
-    static final String METHOD_CALL_REGEX = "\\s*(\\w+)\\s*\\((\\s*(([\\w\\.\"]+)\\s*)?(,\\s*([\\w\\.\"]+)\\s*)*)\\)\\s*;\\s*";
+    static final String METHOD_CALL_REGEX = "\\s*(\\w+)\\s*\\((\\s*(([\\w\\.\"]+)\\s*)?(,\\s*([\\w\\.\"]+)\\s*)*)\\)" +
+            "\\s*;\\s*";
 
-    /** Pattern for when a method is called.
-     * Method name is second capturing group.
-     * Each parameter is fourth capturing group. */
+    /** Pattern for when a method is called, using the METHOD_CALL_REGEX. */
     static final Pattern METHOD_CALL_PATTERN = Pattern.compile(METHOD_CALL_REGEX);
-
-    /** Pattern used to find parameters (variable names) used in a method call. */
-    static final Pattern PARAMETER_PATTERN = Pattern.compile(VARIABLE_NAME_REGEX);
 
     /** Regex options of reserved words that can begin variable declaration. */
     static final String VARIABLE_DECLARATION_WORDS_REGEX = "int|double|String|boolean|char|final";
@@ -103,10 +101,12 @@ public class Sjavac {
     static final String METHOD_RETURN_KEYWORD = "return";
 
     /** Pattern for a reserved word. */
-    static final Pattern RESERVED_WORD_PATTERN = Pattern.compile("^\\s*(int|double|String|boolean|char|final|void|if|while|true|false|return)");
+    static final Pattern RESERVED_WORD_PATTERN = Pattern.compile("^\\s*(int|double|String|boolean|char|final|void|if" +
+            "|while|true|false|return)");
 
-    /** Pattern for valid non-reserved word sequences: closing curly brace, variable initialization, and method calling. */
-    static final Pattern NON_RESERVED_PATTERN = Pattern.compile("^\\s*(}|\\w+\\s*=\\s*[\\w\\.\"]+\\s*;|\\w+\\s*\\(\\s*([\\w\\.\"]+)?(,\\s*[\\w\\.\"]+\\s*)*\\)\\s*;)\\s*");
+    /** Pattern for valid non-reserved sequences: closing curly brace, variable initialization, and method calling. */
+    static final Pattern NON_RESERVED_PATTERN = Pattern.compile("^\\s*(}|\\w+\\s*=\\s*[\\w\\.\"]+\\s*;|\\w+\\s*\\(" +
+            "\\s*([\\w\\.\"]+)?(,\\s*[\\w\\.\"]+\\s*)*\\)\\s*;)\\s*");
 
     /** Pattern for the end of each line, which either be a semicolon, or open or closed curly brace. Used with find. */
     static final Pattern END_OF_LINE_PATTERN = Pattern.compile("[;\\{\\}]\\s*$");
@@ -151,7 +151,6 @@ public class Sjavac {
             printGeneralError(error.getMessage());
         }
         catch (IllegalCodeException error){
-            error.printStackTrace();
             System.out.println(ILLEGAL_CODE_OUTPUT);
         }
     }
@@ -185,7 +184,6 @@ public class Sjavac {
 
         lineCounter.close();
         return lineCount;
-
     }
 
     /**

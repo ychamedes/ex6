@@ -13,7 +13,6 @@ import static oop.ex6.main.Sjavac.*;
  * methods in a scope*/
 public class MainScopeChecker extends ScopeChecker {
 
-
     /**
      * Builds a main scope, containing all the lines in the program
      * @param lines the lines in the program file
@@ -61,8 +60,7 @@ public class MainScopeChecker extends ScopeChecker {
                             String methodName = null;
                             Matcher methodDeclarationMatcher = METHOD_PATTERN.matcher(line);
                             if (methodDeclarationMatcher.find()) {
-                                methodName = methodDeclarationMatcher.group(NAME_CAPTURING_GROUP);
-
+                                methodName = methodDeclarationMatcher.group(METHOD_NAME_CAPTURING_GROUP);
                             }
 
                             if (isExistingMethod(methodName)) {
@@ -78,7 +76,7 @@ public class MainScopeChecker extends ScopeChecker {
                         checkVariableAssignment(line, scope);
                     }
                 }
-                    else {
+                else {
                     tempSubscope.add(line);
                     if (line.matches(OPENING_BRACKET_REGEX)) {
                         bracketBalance++;
@@ -86,9 +84,11 @@ public class MainScopeChecker extends ScopeChecker {
                     if (line.matches(CLOSING_BRACKET_REGEX)) {
                         bracketBalance--;
                         if (bracketBalance == 0) {
-                            ArrayList<String> childScopeLines = new ArrayList<>(tempSubscope);
-                            scopeStack.push(new Scope(childScopeLines, scope));
-                            tempSubscope.clear();
+                            if (lines.indexOf(line) == lines.size() - 1){
+                                ArrayList<String> childScopeLines = new ArrayList<>(tempSubscope);
+                                scopeStack.push(new Scope(childScopeLines, scope));
+                                tempSubscope.clear();
+                            }
                         }
                     }
                 }

@@ -33,7 +33,7 @@ public class Variable{
     }
 
     /**
-     *
+     * Get the variable's type.
      * @return the variable's type
      */
     public String getType(){
@@ -41,7 +41,7 @@ public class Variable{
     }
 
     /**
-     *
+     * Get the variable's name.
      * @return the variable's name
      */
     String getName(){
@@ -49,7 +49,7 @@ public class Variable{
     }
 
     /**
-     *
+     * Get the variable's value.
      * @return the variable's value
      */
     public String getValue(){
@@ -65,7 +65,7 @@ public class Variable{
     }
 
     /**
-     *
+     * Return if the variable is "final"
      * @return true if the variable is final, false otherwise
      */
     public boolean isVariableFinal(){

@@ -3,9 +3,6 @@ package oop.ex6.main;
 import oop.ex6.Exceptions.IllegalCodeException;
 import oop.ex6.Scopes.Variable;
 
-import oop.ex6.Exceptions.IllegalCodeException;
-import oop.ex6.Scopes.Variable;
-
 public class VariableChecker {
 
     /** Reserved word for a boolean variable*/
@@ -22,7 +19,6 @@ public class VariableChecker {
 
     /** Reserved word for a char variable*/
     private static final String CHAR = "char";
-
 
     private static final String BOOLEAN_VALUE_REGEX = "true|false";
     private static final String STRING_VALUE_REGEX = "^\"[\\w\\s]*\"$";

@@ -1,12 +1,10 @@
 package oop.ex6.main;
 
 import oop.ex6.Exceptions.IllegalCodeException;
-import oop.ex6.Scopes.Method;
 import oop.ex6.Scopes.Scope;
 import oop.ex6.Scopes.Variable;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Stack;
 import java.util.regex.Matcher;
 
@@ -30,26 +28,22 @@ class ScopeChecker {
     private final static int RETURN_LINE_INDEX = -2;
     private final static int CONDITION_CAPTURING_GROUP = 2;
     private final static int TYPE_CAPTURING_GROUP = 3;
-    final static int NAME_CAPTURING_GROUP = 2;
-    private final static int VALUE_CAPTURING_GROUP = 4;
+    final static int METHOD_NAME_CAPTURING_GROUP = 1;
+    private final static int VARIABLE_NAME_CAPTURING_GROUP = 2;
+    private final static int VALUE_CAPTURING_GROUP = 3;
     private final static int MINIMUM_METHOD_LINES = 3;
-
 
     /**
      * A Stack object that stores Scopes that are yet to be checked
      */
     static Stack<Scope> scopeStack = new Stack<>();
 
-    /**
-     * An ArrayList of the methods declared in the main scope
-     */
-    //protected static ArrayList<Method> methods = new ArrayList<>();
+    /** An ArrayList of the methods declared in the main scope */
     static ArrayList<String> methods = new ArrayList<>();
 
 
     /**
      * Check a given Scope for all variable, method, and scope-related issues.
-     *
      * @param scope the scope to be checked
      * @throws IllegalCodeException if any illegal code is detected
      */
@@ -110,7 +104,6 @@ class ScopeChecker {
                                 throw new IllegalCodeException();
                             }
                         } else {
-                            System.out.println(firstWord);
                             throw new IllegalCodeException();
                         }
                         bracketBalance++;
@@ -123,7 +116,7 @@ class ScopeChecker {
                     else if (line.matches(METHOD_CALL_REGEX)) {
                         Matcher methodCallMatcher = METHOD_CALL_PATTERN.matcher(line);
                         if (methodCallMatcher.find()) {
-                            String methodName = methodCallMatcher.group(NAME_CAPTURING_GROUP);
+                            String methodName = methodCallMatcher.group(METHOD_NAME_CAPTURING_GROUP);
                             if (!isExistingMethod(methodName)) {
                                 throw new IllegalCodeException();
                             }
@@ -163,7 +156,6 @@ class ScopeChecker {
 
         /**
          * Checks if a condition following an if/while statement is legal
-         *
          * @param condition    the condition to be checked
          * @param currentScope the if/while scope containing the condition
          * @throws IllegalCodeException if the condition is illegal
@@ -196,7 +188,6 @@ class ScopeChecker {
 
         /**
          * Identifies whether the current scope is a method declaration
-         *
          * @param firstLine the first line of the scope
          * @return true if the scope is a method declaration, false otherwise
          */
@@ -224,7 +215,6 @@ class ScopeChecker {
 
         /**
          * Identifies whether a given method is declared in the main scope
-         *
          * @param methodName the name of the method to be checked
          * @return true if the method exists, false otherwise
          */
@@ -234,7 +224,6 @@ class ScopeChecker {
 
         /**
          * Checks if a variable declaration statement is valid
-         *
          * @param line  the line containing the declaration
          * @param scope the scope containing the line
          * @throws IllegalCodeException if the declaration contains illegal code
@@ -255,8 +244,7 @@ class ScopeChecker {
                 Matcher variableAssignmentMatcher = VARIABLE_ASSIGNMENT_PATTERN.matcher(variableNameMatcher.group());
                 if (variableAssignmentMatcher.find()) {
                     String value = variableAssignmentMatcher.group(VALUE_CAPTURING_GROUP);
-                    scope.addVariable(new Variable(type, variableNameMatcher.group(), value,
-                            isFinal));
+                    scope.addVariable(new Variable(type, variableNameMatcher.group(), value, isFinal));
                 }
             }
         }
@@ -270,7 +258,7 @@ class ScopeChecker {
         protected static void checkVariableAssignment (String line, Scope scope) throws IllegalCodeException {
             Matcher variableReassignmentMatcher = VARIABLE_ASSIGNMENT_PATTERN.matcher(line);
             if (variableReassignmentMatcher.find()) {
-                String varName = variableReassignmentMatcher.group(NAME_CAPTURING_GROUP);
+                String varName = variableReassignmentMatcher.group(VARIABLE_NAME_CAPTURING_GROUP);
                 String varValue = variableReassignmentMatcher.group(VALUE_CAPTURING_GROUP);
                 if (varValue.matches(VARIABLE_NAME_REGEX)) {
                     Variable assigningVar = scope.isExistingVariable(varValue);
@@ -293,6 +281,5 @@ class ScopeChecker {
                 }
             }
         }
-
 }
 
